@@ -974,7 +974,7 @@ const load = async () => {
   try {
    const u = await axios.get(`${API}/api/admin/users`, { headers });
 
-setUsers(u.data.data); 
+setUsers(u.data); 
 
   } catch (e) {
     console.log("users error", e);
