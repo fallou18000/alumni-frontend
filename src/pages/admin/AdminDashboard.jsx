@@ -829,7 +829,9 @@ function UserTable({ users, onEdit, onDelete, onView, onApprove, onExport, full 
       <div className="adm-tbl-hd">
         <div className="adm-tbl-title">
           {full ? "Liste des utilisateurs" : "Derniers utilisateurs"}
-          <span className="adm-tbl-ct">{users.length} résultat{users.length !== 1 ? "s" : ""}</span>
+          <span className="adm-tbl-ct">
+  {(users ?? []).length} résultat{(users ?? []).length !== 1 ? "s" : ""}
+</span>
         </div>
         <div className="adm-tbl-actions">
           <button className="btn btn-ghost" onClick={onExport}>
