@@ -722,13 +722,14 @@ function StructView({ type, ufrs, allDepartements,
   filiereForm, setFiliereForm,
   onCreateUfr, onCreateDept, onCreateFiliere }) {
 
+  const API = import.meta.env.VITE_API_URL;
   const [filiereDepts, setFiliereDepts] = useState(allDepartements);
   useEffect(() => { setFiliereDepts(allDepartements); }, [allDepartements]);
 
   const handleFiliereUfrChange = async (ufrId) => {
     if (!ufrId) { setFiliereDepts([]); return; }
     try {
-      const res = await axios.get(`http://localhost:8000/api/departements-by-ufr/${ufrId}`);
+      const res = await axios.get(`${API}/api/departements-by-ufr/${ufrId}`);
       setFiliereDepts(res.data);
     } catch { setFiliereDepts([]); }
   };
@@ -889,6 +890,7 @@ function UserTable({ users, onEdit, onDelete, onView, onApprove, onExport, full 
    ROOT COMPONENT
 ═══════════════════════════════════════ */
 export default function AdminDashboard() {
+  const API     = import.meta.env.VITE_API_URL;
   const token   = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
   const navigate = useNavigate();
@@ -929,14 +931,14 @@ export default function AdminDashboard() {
 
   const fetchUfrs = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/ufrs");
+      const res = await axios.get(`${API}/api/ufrs`);
       setUfrs(res.data);
     } catch { toast("Erreur chargement UFR", "error"); }
   };
 
   const fetchAllDepts = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/departements", { headers });
+      const res = await axios.get(`${API}/api/departements`, { headers });
       setAllDepts(res.data);
     } catch { /* silencieux */ }
   };
@@ -944,10 +946,10 @@ export default function AdminDashboard() {
   const load = async () => {
     try {
       const [s, g, u, p] = await Promise.all([
-        axios.get("http://localhost:8000/api/admin/dashboard",   { headers }),
-        axios.get("http://localhost:8000/api/admin/user-growth", { headers }),
-        axios.get("http://localhost:8000/api/admin/users",       { headers }),
-        axios.get("http://localhost:8000/api/admin/pending",     { headers }),
+        axios.get(`${API}/api/admin/dashboard`,   { headers }),
+        axios.get(`${API}/api/admin/user-growth`, { headers }),
+        axios.get(`${API}/api/admin/users`,       { headers }),
+        axios.get(`${API}/api/admin/pending`,     { headers }),
       ]);
       setStats(s.data);
       setGrowth(g.data);
@@ -958,7 +960,7 @@ export default function AdminDashboard() {
 
   const viewProfile = async (u) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/admin/profile/${u.id}`, { headers });
+      const res = await axios.get(`${API}/api/admin/profile/${u.id}`, { headers });
       setProfile(res.data); setProfileOpen(true);
     } catch { toast("Erreur chargement profil", "error"); }
   };
@@ -966,7 +968,7 @@ export default function AdminDashboard() {
   const updateProfile = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/api/admin/profile/${profile.id}`,
+        `${API}/api/admin/profile/${profile.id}`,
         { job_title: profile.profile?.job_title, promotion: profile.profile?.promotion, filiere_id: profile.profile?.filiere_id },
         { headers }
       );
@@ -976,7 +978,7 @@ export default function AdminDashboard() {
 
   const createUser = async () => {
     try {
-      await axios.post("http://localhost:8000/api/admin/create-user", {
+      await axios.post(`${API}/api/admin/create-user`, {
         first_name: form.first_name, last_name: form.last_name,
         email: form.email, role_id: Number(form.role_id),
         numero_dossier: form.numero_dossier || null,
@@ -992,28 +994,28 @@ export default function AdminDashboard() {
 
   const createUfr = async () => {
     try {
-      await axios.post("http://localhost:8000/api/ufrs", ufrForm, { headers });
+      await axios.post(`${API}/api/ufrs`, ufrForm, { headers });
       fetchUfrs(); toast("UFR créée avec succès.", "success");
     } catch { toast("Erreur création UFR", "error"); }
   };
 
   const createDepartement = async () => {
     try {
-      await axios.post("http://localhost:8000/api/departements", deptForm, { headers });
+      await axios.post(`${API}/api/departements`, deptForm, { headers });
       fetchAllDepts(); toast("Département créé avec succès.", "success");
     } catch { toast("Erreur création département", "error"); }
   };
 
   const createFiliere = async () => {
     try {
-      await axios.post("http://localhost:8000/api/filieres", filiereForm, { headers });
+      await axios.post(`${API}/api/filieres`, filiereForm, { headers });
       toast("Filière créée avec succès.", "success");
     } catch { toast("Erreur création filière", "error"); }
   };
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/api/admin/delete/${id}`, { headers });
+      await axios.delete(`${API}/api/admin/delete/${id}`, { headers });
       load(); toast("Utilisateur supprimé.", "success");
     } catch { toast("Erreur suppression", "error"); }
   };
@@ -1022,14 +1024,14 @@ export default function AdminDashboard() {
 
   const updateUser = async () => {
     try {
-      await axios.put(`http://localhost:8000/api/admin/update/${selectedUser.id}`, selectedUser, { headers });
+      await axios.put(`${API}/api/admin/update/${selectedUser.id}`, selectedUser, { headers });
       setEditOpen(false); setSelectedUser(null); load(); toast("Utilisateur modifié.", "success");
     } catch { toast("Erreur modification", "error"); }
   };
 
   const approveUser = async (id) => {
     try {
-      await axios.put(`http://localhost:8000/api/admin/approve/${id}`, {}, { headers });
+      await axios.put(`${API}/api/admin/approve/${id}`, {}, { headers });
       load(); toast("Utilisateur approuvé.", "success");
     } catch { toast("Erreur approbation", "error"); }
   };
@@ -1038,7 +1040,7 @@ export default function AdminDashboard() {
     setForm({ ...form, ufr_id: id, departement_id: "", filiere_id: "" });
     setDepartements([]); setFilieres([]);
     if (!id) return;
-    const res = await axios.get(`http://localhost:8000/api/departements-by-ufr/${id}`);
+    const res = await axios.get(`${API}/api/departements-by-ufr/${id}`);
     setDepartements(res.data);
   };
 
@@ -1046,7 +1048,7 @@ export default function AdminDashboard() {
     setForm({ ...form, departement_id: id, filiere_id: "" });
     setFilieres([]);
     if (!id) return;
-    const res = await axios.get(`http://localhost:8000/api/filieres-by-departement/${id}`);
+    const res = await axios.get(`${API}/api/filieres-by-departement/${id}`);
     setFilieres(res.data);
   };
 
@@ -1066,7 +1068,6 @@ export default function AdminDashboard() {
 
     const ws = XLSX.utils.json_to_sheet(data);
 
-    // Largeurs de colonnes auto
     const colWidths = [
       { wch: 14 }, { wch: 14 }, { wch: 30 },
       { wch: 14 }, { wch: 14 }, { wch: 12 }, { wch: 16 },
@@ -1145,7 +1146,6 @@ export default function AdminDashboard() {
             active={view === "filiere"} onClick={() => setView("filiere")} />
         </nav>
 
-        {/* ── Déconnexion en bas, Configuration supprimée ── */}
         <div className="adm-sb-ft">
           <NavItem icon={LogOut} label="Déconnexion" active={false}
             onClick={() => navigate("/login")} />
@@ -1355,13 +1355,13 @@ export default function AdminDashboard() {
             onUfrChange={async id => {
               setSelectedUser({ ...selectedUser, ufr_id: id, departement_id: "", filiere_id: "" });
               if (!id) { setDepartements([]); setFilieres([]); return; }
-              const res = await axios.get(`http://localhost:8000/api/departements-by-ufr/${id}`);
+              const res = await axios.get(`${API}/api/departements-by-ufr/${id}`);
               setDepartements(res.data);
             }}
             onDeptChange={async id => {
               setSelectedUser({ ...selectedUser, departement_id: id, filiere_id: "" });
               if (!id) { setFilieres([]); return; }
-              const res = await axios.get(`http://localhost:8000/api/filieres-by-departement/${id}`);
+              const res = await axios.get(`${API}/api/filieres-by-departement/${id}`);
               setFilieres(res.data);
             }}
             onSave={updateUser} onClose={() => setEditOpen(false)} saveLabel="Modifier" />
