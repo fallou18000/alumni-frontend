@@ -937,11 +937,8 @@ export default function AdminDashboard() {
   };
 
   const fetchAllDepts = async () => {
-    try {
-      const res = await axios.get(`${API}/api/departements`, { headers });
-      setAllDepts(res.data);
-    } catch { /* silencieux */ }
-  };
+  setAllDepts([]); 
+};
 const load = async () => {
 
   try {
