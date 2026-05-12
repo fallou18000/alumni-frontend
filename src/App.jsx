@@ -21,10 +21,14 @@ import About from "./pages/alumni/About";
 import PublicProfile from "./pages/alumni/PublicProfile";
 import ResponsableDashboard from "./pages/responsable/ResponsableDashboard";
 
- const getUser = () => {
-  const user = localStorage.getItem("user");
-  if (!user || user === "undefined") return null;
-  return JSON.parse(user);
+const getUser = () => {
+  try {
+    const user = localStorage.getItem("user");
+    if (!user || user === "undefined") return null;
+    return JSON.parse(user);
+  } catch (e) {
+    return null;
+  }
 };
 
 function App() {
@@ -72,7 +76,7 @@ function App() {
     <Route
   path="/responsable"
   element={
-    user?.role_id === 3
+    getUser()?.role_id === 3
       ? <ResponsableDashboard />
       : <Login />
   }
