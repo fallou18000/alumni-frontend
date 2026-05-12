@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const [users, setUsers] = useState([]);
 /* ═══════════════════════════════════════
    CSS — all scoped under .adm
 ═══════════════════════════════════════ */
@@ -1120,7 +1121,7 @@ setUsers(u.data.data);
   };
 
   // ── Recherche 100% locale ──
-  const filtered = users.filter(u => {
+  const filtered =  (users || []).filter(u => {
     const q = search.toLowerCase().trim();
     const matchName = !q ||
       String(u.first_name || "").toLowerCase().includes(q) ||
