@@ -462,10 +462,11 @@ const AV_GRADS = [
 const avColor = id => AV_GRADS[(id || 0) % AV_GRADS.length];
 const initials = u =>
   ((u?.first_name?.[0] || "") + (u?.last_name?.[0] || "")).toUpperCase() || "?";
+ const [users, setUsers] = useState([]);
 
 /* ─── TOAST HOOK ─── */
 function useToasts() {
-  const [users, setUsers] = useState([]);
+ 
   const [toasts, setToasts] = useState([]);
   const push = (msg, type = "info") => {
     const id = Date.now();
