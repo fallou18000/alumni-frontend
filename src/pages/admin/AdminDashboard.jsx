@@ -966,12 +966,9 @@ const load = async () => {
   }
 
   try {
-    const u = await axios.get(
-      `${API}/api/admin/users`,
-      { headers }
-    );
+   const u = await axios.get(`${API}/api/admin/users`, { headers });
 
-    console.log(u);
+setUsers(u.data.data); 
 
   } catch (e) {
     console.log("users error", e);
