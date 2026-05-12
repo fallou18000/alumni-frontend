@@ -974,7 +974,7 @@ const load = async () => {
       { headers }
     );
 
-    setUsers(u.data.data ?? []);
+    console.log(u);
 
   } catch (e) {
     console.log("users error", e);
