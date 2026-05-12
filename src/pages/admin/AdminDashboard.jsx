@@ -1072,12 +1072,18 @@ const load = async () => {
   };
 
   const handleUfrChange = async (id) => {
-    setForm({ ...form, ufr_id: id, departement_id: "", filiere_id: "" });
-    setDepartements([]); setFilieres([]);
-    if (!id) return;
-    const res = await axios.get(`${API}/api/departements-by-ufr/${id}`);
-    setDepartements(res.data);
-  };
+  setForm({ ...form, ufr_id: id, departement_id: "", filiere_id: "" });
+  setDepartements([]);
+  setFilieres([]);
+
+  if (!id) return;
+
+  const res = await axios.get(
+    `${API}/api/departements-by-ufr/${id}`
+  );
+
+  setDepartements(res.data);
+};
 
   const handleDeptChange = async (id) => {
     setForm({ ...form, departement_id: id, filiere_id: "" });
