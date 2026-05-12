@@ -462,7 +462,7 @@ const AV_GRADS = [
 const avColor = id => AV_GRADS[(id || 0) % AV_GRADS.length];
 const initials = u =>
   ((u?.first_name?.[0] || "") + (u?.last_name?.[0] || "")).toUpperCase() || "?";
- const [users, setUsers] = useState([]);
+
 
 /* ─── TOAST HOOK ─── */
 function useToasts() {
@@ -893,6 +893,7 @@ function UserTable({ users, onEdit, onDelete, onView, onApprove, onExport, full 
    ROOT COMPONENT
 ═══════════════════════════════════════ */
 export default function AdminDashboard() {
+   const [users, setUsers] = useState([]);
   const API     = import.meta.env.VITE_API_URL;
   const token   = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
