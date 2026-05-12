@@ -942,21 +942,56 @@ export default function AdminDashboard() {
       setAllDepts(res.data);
     } catch { /* silencieux */ }
   };
+const load = async () => {
 
-  const load = async () => {
-    try {
-      const [s, g, u, p] = await Promise.all([
-        axios.get(`${API}/api/admin/dashboard`,   { headers }),
-        axios.get(`${API}/api/admin/user-growth`, { headers }),
-        axios.get(`${API}/api/admin/users`,       { headers }),
-        axios.get(`${API}/api/admin/pending`,     { headers }),
-      ]);
-      setStats(s.data);
-      setGrowth(g.data);
-      setUsers(u.data.data ?? []);
-      setPendingUsers(p.data.pending_alumni ?? []);
-    } catch { toast("Erreur de chargement", "error"); }
-  };
+  try {
+    const s = await axios.get(
+      `${API}/api/admin/dashboard`,
+      { headers }
+    );
+
+    setStats(s.data);
+
+  } catch (e) {
+    console.log("dashboard error", e);
+  }
+
+  try {
+    const g = await axios.get(
+      `${API}/api/admin/user-growth`,
+      { headers }
+    );
+
+    setGrowth(g.data);
+
+  } catch (e) {
+    console.log("growth error", e);
+  }
+
+  try {
+    const u = await axios.get(
+      `${API}/api/admin/users`,
+      { headers }
+    );
+
+    setUsers(u.data.data ?? []);
+
+  } catch (e) {
+    console.log("users error", e);
+  }
+
+  try {
+    const p = await axios.get(
+      `${API}/api/admin/pending`,
+      { headers }
+    );
+
+    setPendingUsers(p.data.pending_alumni ?? []);
+
+  } catch (e) {
+    console.log("pending error", e);
+  }
+};
 
   const viewProfile = async (u) => {
     try {
