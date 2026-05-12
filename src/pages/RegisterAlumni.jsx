@@ -19,7 +19,6 @@ html, body {
   overflow: auto;
 }
 
-/* ══ LAYOUT ══ */
 .rg-wrap {
   display: flex;
   height: 100vh;
@@ -27,9 +26,6 @@ html, body {
   overflow: hidden;
 }
 
-/* ═══════════════════════════════════════════
-   PANNEAU GAUCHE — IMAGE TRÈS VISIBLE
-═══════════════════════════════════════════ */
 .rg-left {
   flex: 1.25;
   position: relative;
@@ -42,13 +38,11 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* très visible : brightness haute */
   filter: brightness(0.82) saturate(1.08) contrast(1.03);
   transform: scale(1.03);
   transition: transform 18s ease;
 }
 
-/* Voile minimaliste — juste assez pour lire */
 .rg-veil {
   position: absolute;
   inset: 0;
@@ -60,7 +54,6 @@ html, body {
   );
 }
 
-/* Fondu bas pour les textes */
 .rg-fade-bottom {
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -74,7 +67,6 @@ html, body {
   pointer-events: none;
 }
 
-/* Séparateur droit lumineux */
 .rg-seam {
   position: absolute;
   top: 0; right: 0; bottom: 0;
@@ -91,7 +83,6 @@ html, body {
   z-index: 10;
 }
 
-/* ── Logo haut gauche ── */
 .rg-left-logo {
   position: absolute;
   top: 38px; left: 48px;
@@ -101,15 +92,9 @@ html, body {
   gap: 14px;
 }
 .rg-logo-img {
-  width: 68px;
-  height: 68px;
-  border-radius: 18px;
-  object-fit: cover;
+  width: 68px; height: 68px; border-radius: 18px; object-fit: cover;
   border: 2.5px solid rgba(255,255,255,0.35);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12),
-    0 10px 36px rgba(0,0,0,0.52),
-    0 0 24px rgba(99,102,241,0.20);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 10px 36px rgba(0,0,0,0.52), 0 0 24px rgba(99,102,241,0.20);
   filter: brightness(1.08) contrast(1.04);
 }
 .rg-logo-fb {
@@ -131,7 +116,6 @@ html, body {
   color: rgba(196,181,253,0.65); margin-top: 5px;
 }
 
-/* ── Corps gauche (bas) ── */
 .rg-left-body {
   position: absolute;
   inset: 0; z-index: 5;
@@ -168,7 +152,6 @@ html, body {
   line-height: 1.78; max-width: 400px; margin-bottom: 36px;
 }
 
-/* Étapes */
 .rg-steps {
   display: flex; flex-direction: column;
   background: rgba(255,255,255,0.06);
@@ -193,19 +176,14 @@ html, body {
 .rg-step-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.78); }
 .rg-step-sub   { font-size: 11px; color: rgba(255,255,255,0.32); margin-top: 2px; }
 
-/* ═══════════════════════════════════════════
-   PANNEAU DROIT — THÈME CLAIR
-═══════════════════════════════════════════ */
 .rg-right {
   width: 510px; flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
   padding: 24px 32px;
-  /* Fond clair légèrement teinté — pas sombre */
   background: linear-gradient(160deg, #f8faff 0%, #f1f4fd 100%);
   position: relative; overflow: hidden;
 }
 
-/* Halo décoratif subtil */
 .rg-right::before {
   content: '';
   position: absolute;
@@ -223,7 +201,6 @@ html, body {
   filter: blur(50px); pointer-events: none;
 }
 
-/* ── Card (fond blanc pur) ── */
 .rg-card {
   width: 100%;
   max-width: 440px;
@@ -246,14 +223,12 @@ html, body {
   background: rgba(99,102,241,0.18); border-radius: 2px;
 }
 
-/* Bande colorée haut de card */
 .rg-card-top-bar {
   position: absolute; top: 0; left: 0; right: 0; height: 3px;
   border-radius: 24px 24px 0 0;
   background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
 }
 
-/* ── Header card ── */
 .rg-card-header {
   display: flex; align-items: center; gap: 14px;
   margin-bottom: 22px; padding-bottom: 20px;
@@ -283,7 +258,6 @@ html, body {
   color: #6366f1; opacity: 0.6; margin-top: 4px;
 }
 
-/* ── Titre ── */
 .rg-form-h {
   font-family: 'Lora', Georgia, serif;
   font-size: 22px; font-weight: 600;
@@ -292,7 +266,6 @@ html, body {
 }
 .rg-form-sub { font-size: 12px; color: #94a3b8; margin-bottom: 18px; line-height: 1.5; }
 
-/* ── Section labels ── */
 .rg-section {
   display: flex; align-items: center; gap: 8px;
   font-size: 8px; font-weight: 700; letter-spacing: 2.5px;
@@ -303,10 +276,8 @@ html, body {
   content: ''; flex: 1; height: 1px; background: #e2e8f0;
 }
 
-/* ── Grille ── */
 .rg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* ── Champs ── */
 .rg-fld { display: flex; flex-direction: column; gap: 5px; }
 .rg-lbl {
   font-size: 8.5px; font-weight: 700; letter-spacing: 2px;
@@ -343,7 +314,35 @@ html, body {
   color: #94a3b8; pointer-events: none;
 }
 
-/* ── Upload ── */
+/* ── Skeleton loader UFR ── */
+.rg-skeleton {
+  height: 38px; border-radius: 10px;
+  background: linear-gradient(90deg, #f1f4fd 25%, #e8ecf8 50%, #f1f4fd 75%);
+  background-size: 200% 100%;
+  animation: rg-shimmer 1.4s infinite;
+  border: 1.5px solid #e2e8f0;
+}
+@keyframes rg-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Bannière erreur chargement ── */
+.rg-load-err {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; padding: 9px 13px; border-radius: 10px; margin-bottom: 10px;
+  background: #fff7ed; border: 1px solid #fed7aa;
+  font-size: 11.5px; color: #92400e; font-weight: 500;
+}
+.rg-load-err button {
+  background: none; border: none; cursor: pointer;
+  color: #ea580c; font-size: 11px; font-weight: 700;
+  padding: 3px 8px; border-radius: 6px;
+  border: 1px solid rgba(234,88,12,0.30);
+  white-space: nowrap; transition: all .15s;
+}
+.rg-load-err button:hover { background: rgba(234,88,12,0.08); }
+
 .rg-upload {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   padding: 18px 14px; border-radius: 12px;
@@ -378,7 +377,6 @@ html, body {
   border-radius: 10px; border: 1px solid #e2e8f0; margin-top: 6px;
 }
 
-/* ── Toast ── */
 .rg-toast {
   display: flex; align-items: center; gap: 9px;
   padding: 11px 14px; border-radius: 10px; margin-bottom: 12px;
@@ -396,7 +394,6 @@ html, body {
 .rg-toast.success .rg-toast-dot { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
 .rg-toast.error   .rg-toast-dot { background: #f43f5e; box-shadow: 0 0 6px rgba(244,63,94,0.5); }
 
-/* ── Bouton submit ── */
 .rg-btn {
   width: 100%; padding: 13px 18px; border-radius: 11px; border: none;
   cursor: pointer;
@@ -421,7 +418,6 @@ html, body {
 .rg-btn:active:not(:disabled) { transform: scale(0.985); }
 .rg-btn:disabled { opacity: 0.42; cursor: not-allowed; }
 
-/* Spinner */
 .rg-spin {
   width: 14px; height: 14px; border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff;
@@ -429,7 +425,6 @@ html, body {
 }
 @keyframes rg-spin { to { transform: rotate(360deg); } }
 
-/* Lien login */
 .rg-login-link {
   text-align: center; margin-top: 14px;
   font-size: 12px; color: #64748b;
@@ -440,7 +435,6 @@ html, body {
 }
 .rg-login-link a:hover { color: #4f46e5; }
 
-/* Badge sécurité */
 .rg-secure {
   display: flex; align-items: center; justify-content: center; gap: 5px;
   margin-top: 12px; font-size: 10px; color: #cbd5e1; letter-spacing: 0.2px;
@@ -459,15 +453,28 @@ if (typeof document !== "undefined" && !document.getElementById("rg-css")) {
 }
 
 /* ─── Icônes ─── */
-const IcoUser     = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>;
-const IcoMail     = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>;
-const IcoFile     = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
-const IcoGrad     = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>;
-const IcoChevron  = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="6 9 12 15 18 9"/></svg>;
-const IcoUpload   = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>;
-const IcoCheck    = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M20 6L9 17l-5-5"/></svg>;
-const IcoArrow    = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
-const IcoLock     = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>;
+const IcoUser    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>;
+const IcoMail    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>;
+const IcoFile    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
+const IcoGrad    = () => <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>;
+const IcoChevron = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="6 9 12 15 18 9"/></svg>;
+const IcoUpload  = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>;
+const IcoCheck   = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M20 6L9 17l-5-5"/></svg>;
+const IcoArrow   = () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>;
+const IcoLock    = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>;
+const IcoRefresh = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>;
+
+/* ── Utilitaire fetch avec retry ── */
+const fetchWithRetry = async (fn, retries = 3, delayMs = 1500) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      await new Promise(res => setTimeout(res, delayMs * (i + 1)));
+    }
+  }
+};
 
 /* ─────────────────────────────────────────────
    COMPOSANT PRINCIPAL
@@ -490,24 +497,41 @@ export default function RegisterAlumni() {
   const [loading,      setLoading]      = useState(false);
   const [toast,        setToast]        = useState(null);
 
+  // États de chargement des selects
+  const [ufrsLoading,   setUfrsLoading]   = useState(true);
+  const [ufrsError,     setUfrsError]     = useState(false);
+  const [deptLoading,   setDeptLoading]   = useState(false);
+  const [filLoading,    setFilLoading]    = useState(false);
+
   const fileRef  = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api.get("/ufrs").then(r => setUfrs(r.data)).catch(() => {});
-  }, []);
+  /* ── Chargement UFRs avec retry ── */
+  const loadUfrs = () => {
+    setUfrsLoading(true);
+    setUfrsError(false);
+    fetchWithRetry(() => api.get("/ufrs").then(r => r.data))
+      .then(data => { setUfrs(data); setUfrsLoading(false); })
+      .catch(() => { setUfrsError(true); setUfrsLoading(false); });
+  };
+
+  useEffect(() => { loadUfrs(); }, []);
 
   useEffect(() => {
     if (!ufr_id) { setDepartements([]); setDepartementId(""); return; }
-    api.get(`/departements-by-ufr/${ufr_id}`)
-      .then(r => setDepartements(r.data)).catch(() => {});
+    setDeptLoading(true);
+    fetchWithRetry(() => api.get(`/departements-by-ufr/${ufr_id}`).then(r => r.data))
+      .then(data => { setDepartements(data); setDeptLoading(false); })
+      .catch(() => { setDeptLoading(false); });
     setDepartementId(""); setFiliereId(""); setFilieres([]);
   }, [ufr_id]);
 
   useEffect(() => {
     if (!departement_id) { setFilieres([]); setFiliereId(""); return; }
-    api.get(`/filieres-by-departement/${departement_id}`)
-      .then(r => setFilieres(r.data)).catch(() => {});
+    setFilLoading(true);
+    fetchWithRetry(() => api.get(`/filieres-by-departement/${departement_id}`).then(r => r.data))
+      .then(data => { setFilieres(data); setFilLoading(false); })
+      .catch(() => { setFilLoading(false); });
     setFiliereId("");
   }, [departement_id]);
 
@@ -564,14 +588,12 @@ export default function RegisterAlumni() {
           <div className="rg-fade-bottom" />
           <div className="rg-seam" />
 
-          {/* Logo haut gauche */}
           <div className="rg-left-logo">
             {logo ? (
               <img src={logo} alt="Alumni" className="rg-logo-img" />
             ) : (
               <div className="rg-logo-fb">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
-                  stroke="#c4b5fd" strokeWidth="2">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c4b5fd" strokeWidth="2">
                   <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
                   <path d="M6 12v5c3 3 9 3 12 0v-5"/>
                 </svg>
@@ -583,7 +605,6 @@ export default function RegisterAlumni() {
             </div>
           </div>
 
-          {/* Texte bas */}
           <div className="rg-left-body">
             <div>
               <div className="rg-eyebrow">Inscription officielle</div>
@@ -614,19 +635,17 @@ export default function RegisterAlumni() {
           </div>
         </div>
 
-        {/* ══ DROITE — FOND CLAIR ══ */}
+        {/* ══ DROITE ══ */}
         <div className="rg-right">
           <div className="rg-card">
             <div className="rg-card-top-bar" />
 
-            {/* Header */}
             <div className="rg-card-header">
               {logo ? (
                 <img src={logo} alt="Logo" className="rg-card-logo-img" />
               ) : (
                 <div className="rg-card-logo-fb">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-                    stroke="#e0e7ff" strokeWidth="2">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#e0e7ff" strokeWidth="2">
                     <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
                     <path d="M6 12v5c3 3 9 3 12 0v-5"/>
                   </svg>
@@ -695,41 +714,76 @@ export default function RegisterAlumni() {
 
               {/* Parcours */}
               <div className="rg-section" style={{ marginTop: 14 }}>Parcours académique</div>
+
+              {/* Erreur chargement UFR */}
+              {ufrsError && (
+                <div className="rg-load-err">
+                  <span>⚠️ Impossible de charger les UFR. Serveur en démarrage…</span>
+                  <button type="button" onClick={loadUfrs}>
+                    <IcoRefresh /> Réessayer
+                  </button>
+                </div>
+              )}
+
               <div className="rg-fld" style={{ marginBottom: 9 }}>
                 <div className="rg-lbl">UFR</div>
                 <div className="rg-inp-wrap">
-                  <span className="rg-ico"><IcoGrad /></span>
-                  <select className="rg-sel" value={ufr_id}
-                    onChange={e => setUfrId(e.target.value)}>
-                    <option value="">Sélectionner une UFR</option>
-                    {ufrs.map(u => <option key={u.id} value={u.id}>{u.nom}</option>)}
-                  </select>
-                  <span className="rg-sel-arr"><IcoChevron /></span>
+                  {ufrsLoading ? (
+                    <div className="rg-skeleton" />
+                  ) : (
+                    <>
+                      <span className="rg-ico"><IcoGrad /></span>
+                      <select className="rg-sel" value={ufr_id}
+                        disabled={ufrsError}
+                        onChange={e => setUfrId(e.target.value)}>
+                        <option value="">
+                          {ufrsError ? "Erreur de chargement" : "Sélectionner une UFR"}
+                        </option>
+                        {ufrs.map(u => <option key={u.id} value={u.id}>{u.nom}</option>)}
+                      </select>
+                      <span className="rg-sel-arr"><IcoChevron /></span>
+                    </>
+                  )}
                 </div>
               </div>
+
               <div className="rg-row">
                 <div className="rg-fld">
                   <div className="rg-lbl">Département</div>
                   <div className="rg-inp-wrap">
-                    <span className="rg-ico"><IcoGrad /></span>
-                    <select className="rg-sel" value={departement_id}
-                      disabled={!ufr_id} onChange={e => setDepartementId(e.target.value)}>
-                      <option value="">Département</option>
-                      {departements.map(d => <option key={d.id} value={d.id}>{d.nom}</option>)}
-                    </select>
-                    <span className="rg-sel-arr"><IcoChevron /></span>
+                    {deptLoading ? (
+                      <div className="rg-skeleton" />
+                    ) : (
+                      <>
+                        <span className="rg-ico"><IcoGrad /></span>
+                        <select className="rg-sel" value={departement_id}
+                          disabled={!ufr_id || deptLoading}
+                          onChange={e => setDepartementId(e.target.value)}>
+                          <option value="">Département</option>
+                          {departements.map(d => <option key={d.id} value={d.id}>{d.nom}</option>)}
+                        </select>
+                        <span className="rg-sel-arr"><IcoChevron /></span>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div className="rg-fld">
                   <div className="rg-lbl">Filière</div>
                   <div className="rg-inp-wrap">
-                    <span className="rg-ico"><IcoGrad /></span>
-                    <select className="rg-sel" value={filiere_id}
-                      disabled={!departement_id} onChange={e => setFiliereId(e.target.value)}>
-                      <option value="">Filière</option>
-                      {filieres.map(f => <option key={f.id} value={f.id}>{f.name||f.nom}</option>)}
-                    </select>
-                    <span className="rg-sel-arr"><IcoChevron /></span>
+                    {filLoading ? (
+                      <div className="rg-skeleton" />
+                    ) : (
+                      <>
+                        <span className="rg-ico"><IcoGrad /></span>
+                        <select className="rg-sel" value={filiere_id}
+                          disabled={!departement_id || filLoading}
+                          onChange={e => setFiliereId(e.target.value)}>
+                          <option value="">Filière</option>
+                          {filieres.map(f => <option key={f.id} value={f.id}>{f.name||f.nom}</option>)}
+                        </select>
+                        <span className="rg-sel-arr"><IcoChevron /></span>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -751,7 +805,6 @@ export default function RegisterAlumni() {
               </div>
               {preview && <img src={preview} alt="Aperçu" className="rg-preview" />}
 
-              {/* Submit */}
               <button type="submit" className="rg-btn" disabled={loading || !isValid}>
                 {loading
                   ? <><div className="rg-spin" /> Envoi en cours…</>
