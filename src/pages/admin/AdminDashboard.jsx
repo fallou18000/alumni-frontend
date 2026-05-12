@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const [users, setUsers] = useState([]);
+
 /* ═══════════════════════════════════════
    CSS — all scoped under .adm
 ═══════════════════════════════════════ */
@@ -465,6 +465,7 @@ const initials = u =>
 
 /* ─── TOAST HOOK ─── */
 function useToasts() {
+  const [users, setUsers] = useState([]);
   const [toasts, setToasts] = useState([]);
   const push = (msg, type = "info") => {
     const id = Date.now();
