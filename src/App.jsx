@@ -21,7 +21,14 @@ import About from "./pages/alumni/About";
 import PublicProfile from "./pages/alumni/PublicProfile";
 import ResponsableDashboard from "./pages/responsable/ResponsableDashboard";
 
+ const getUser = () => {
+  const user = localStorage.getItem("user");
+  if (!user || user === "undefined") return null;
+  return JSON.parse(user);
+};
+
 function App() {
+ 
   return (
     <BrowserRouter>
       <Routes>
@@ -62,11 +69,10 @@ function App() {
         <Route path="/admin/create-user" element={<CreateUser />} />
         <Route path="/admin/user/:id" element={<Profile />} />
 
-        <Route
+    <Route
   path="/responsable"
   element={
-    localStorage.getItem("token") &&
-    JSON.parse(localStorage.getItem("user") || "null")?.role_id === 3
+    user?.role_id === 3
       ? <ResponsableDashboard />
       : <Login />
   }
