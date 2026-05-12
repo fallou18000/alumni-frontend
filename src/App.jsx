@@ -66,7 +66,7 @@ function App() {
   path="/responsable"
   element={
     localStorage.getItem("token") &&
-    JSON.parse(localStorage.getItem("user"))?.role_id === 3
+    JSON.parse(localStorage.getItem("user") || "null")?.role_id === 3
       ? <ResponsableDashboard />
       : <Login />
   }
