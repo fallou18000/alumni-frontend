@@ -1342,7 +1342,7 @@ export default function AdminDashboard() {
                 <div className="adm-banner-dots" />
                 <div className="adm-banner-left">
                   <div className="adm-banner-eyebrow"><Sparkles size={10} /> Espace Administrateur</div>
-                  <div className="adm-banner-title">Bonjour, {adminName.split(" ")[0]} 👋</div>
+                  <div className="adm-banner-title">Bienvenue, {adminName.split(" ")[0]} </div>
                   <div className="adm-banner-sub">Vue d'ensemble de la plateforme Alumni UIDT</div>
                 </div>
                 <div className="adm-banner-right">
