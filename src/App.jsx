@@ -20,7 +20,7 @@ import CreateUser from "./pages/admin/CreateUser";
 import About from "./pages/alumni/About";
 import PublicProfile from "./pages/alumni/PublicProfile";
 import ResponsableDashboard from "./pages/responsable/ResponsableDashboard";
-
+import SetPassword from "./pages/SetPassword";
 const getUser = () => {
   try {
     const user = localStorage.getItem("user");
@@ -58,7 +58,7 @@ function App() {
           <Route path="/about" element={<About />} />
         </Route>
 
-        <Route path="/set-password" element={<ChangePassword />} />
+        <Route path="/set-password" element={<SetPassword />} />
 
         {/* ADMIN */}
         <Route
