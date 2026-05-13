@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import api from "../../services/api";
 import { useParams } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 /* ─── Icônes SVG inline ─────────────────────────────── */
 const Ico = ({ children, size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
@@ -153,6 +155,9 @@ export default function Profile() {
   const fullName = `${u.first_name || ""} ${u.last_name || ""}`.trim();
   const initials = `${u.first_name?.[0] || ""}${u.last_name?.[0] || ""}`.toUpperCase() || "AL";
 
+  // ── Helper : construit l'URL d'un fichier stocké sur le backend ──
+  const storageUrl = (path) => `${API_URL}/storage/${path}`;
+
   return (
     <div className="pf-root">
 
@@ -213,7 +218,7 @@ export default function Profile() {
               <img src={preview} className="pf-photo-img" alt="preview" />
             ) : p.photo ? (
               <img
-                src={`http://127.0.0.1:8000/storage/${p.photo}`}
+                src={storageUrl(p.photo)}
                 className="pf-photo-img"
                 alt="photo"
               />
@@ -366,7 +371,7 @@ export default function Profile() {
                 {u.photo_diplome ? (
                   <>
                     <img
-                      src={`http://127.0.0.1:8000/storage/${u.photo_diplome}`}
+                      src={storageUrl(u.photo_diplome)}
                       className="pf-diplome-img"
                       alt="Diplôme"
                     />
@@ -411,7 +416,7 @@ export default function Profile() {
                 <FaTimes />
               </button>
               <img
-                src={`http://127.0.0.1:8000/storage/${u.photo_diplome}`}
+                src={storageUrl(u.photo_diplome)}
                 className="pf-modal-img"
                 alt="Diplôme"
               />
