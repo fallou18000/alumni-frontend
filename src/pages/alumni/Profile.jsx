@@ -284,7 +284,11 @@ export default function Profile() {
                 <InfoRow icon={IcoMail}      label="Email"         value={u.email} />
                 <InfoRow icon={IcoBook}      label="UFR"           value={u.ufr?.nom} />
                 <InfoRow icon={IcoHash}      label="Département"   value={u.departement?.nom} />
-                <InfoRow icon={IcoStar}      label="Filière"       value={u.filiere?.name} />
+                 <InfoRow
+    icon={IcoStar}
+    label="Filière"
+    value={u.filiere?.name || u.filiere?.nom}
+  />
                 <InfoRow icon={IcoHash}      label="N° dossier"    value={u.numero_dossier} />
               </div>
             </motion.div>
@@ -454,23 +458,23 @@ export default function Profile() {
               </div>
 
               <div className="pf-drawer-body">
-                {Object.keys(form).map(k => (
-                  k !== "entreprise_id" && (
-                    <div key={k} className="pf-field">
-                      <label className="pf-field-label">
-                        {fieldMeta[k]?.label || k}
-                      </label>
-                      <input
-                        value={form[k] ?? ""}
-                        onChange={e => setForm({ ...form, [k]: e.target.value })}
-                        placeholder={fieldMeta[k]?.ph || k}
-                        className="pf-input"
-                      />
-                    </div>
-                  )
-                ))}
-              </div>
+  {Object.keys(form).map(k => (
+    k !== "entreprise_id" && k !== "filiere_id" && (
+      <div key={k} className="pf-field">
+        <label className="pf-field-label">
+          {fieldMeta[k]?.label || k}
+        </label>
 
+        <input
+          value={form[k] ?? ""}
+          onChange={e => setForm({ ...form, [k]: e.target.value })}
+          placeholder={fieldMeta[k]?.ph || k}
+          className="pf-input"
+        />
+      </div>
+    )
+  ))}
+</div>
               <div className="pf-drawer-footer">
                 <button className="pf-btn-ghost" onClick={() => setEditOpen(false)}>
                   Annuler
