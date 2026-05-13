@@ -115,9 +115,18 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     const fd = new FormData();
-    Object.keys(form).forEach(k => {
-      if (form[k] !== null && form[k] !== "") fd.append(k, form[k]);
-    });
+  Object.keys(form).forEach(k => {
+  if (
+    form[k] !== null &&
+    form[k] !== undefined &&
+    form[k] !== ""
+  ) {
+    fd.append(k, form[k]);
+  }
+});
+
+// IMPORTANT
+fd.append("filiere_id", form.filiere_id);
     if (photo) fd.append("photo", photo);
     if (id) {
       await api.post(`/admin/profile/${id}?_method=PUT`, fd, { headers });
