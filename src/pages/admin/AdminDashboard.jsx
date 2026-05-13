@@ -16,555 +16,597 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
+/* ════════════════════════════════════════
+   CSS — même design system que ResponsableDashboard
+════════════════════════════════════════ */
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Cabinet+Grotesk:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
 
-.adm *, .adm *::before, .adm *::after { box-sizing: border-box; margin: 0; padding: 0; }
-.adm ::-webkit-scrollbar { width: 4px; height: 4px; }
-.adm ::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.2); border-radius: 4px; }
-.adm ::-webkit-scrollbar-track { background: transparent; }
+.adm2*,.adm2*::before,.adm2*::after{box-sizing:border-box;margin:0;padding:0;}
+.adm2 ::-webkit-scrollbar{width:4px;height:4px;}
+.adm2 ::-webkit-scrollbar-thumb{background:rgba(99,102,241,.18);border-radius:4px;}
+.adm2 ::-webkit-scrollbar-track{background:transparent;}
 
-.adm {
-  display: flex; min-height: 100vh;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13.5px;
-  background: #f0f2f9;
-  color: #1e293b;
-}
-
-:where(.adm) {
-  --primary: #6366f1;
-  --primary2: #818cf8;
-  --primary-light: rgba(99,102,241,0.08);
-  --primary-border: rgba(99,102,241,0.2);
-  --teal: #0ea5e9;
-  --green: #10b981;
-  --gold: #f59e0b;
-  --rose: #f43f5e;
-  --violet: #8b5cf6;
-  --ink1: #0f172a;
-  --ink2: #1e293b;
-  --ink3: #475569;
-  --ink4: #94a3b8;
-  --ink5: #cbd5e1;
-  --bg: #f0f2f9;
-  --bg2: #f8faff;
-  --white: #ffffff;
-  --card: #ffffff;
-  --sidebar: #ffffff;
-  --border: rgba(15,23,42,0.07);
-  --border2: rgba(15,23,42,0.11);
-  --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
-  --shadow: 0 4px 16px rgba(15,23,42,0.07), 0 1px 4px rgba(15,23,42,0.05);
-  --shadow-md: 0 8px 30px rgba(15,23,42,0.10), 0 2px 8px rgba(15,23,42,0.06);
-  --shadow-lg: 0 20px 60px rgba(15,23,42,0.14), 0 4px 16px rgba(15,23,42,0.08);
-  --r: 16px; --r2: 12px; --r3: 9px;
-  --font: 'Plus Jakarta Sans', sans-serif;
-  --mono: 'DM Mono', monospace;
+:where(.adm2){
+  --p:#6366f1;
+  --p2:#818cf8;
+  --pl:rgba(99,102,241,.09);
+  --pb:rgba(99,102,241,.2);
+  --sky:#0ea5e9;
+  --em:#10b981;
+  --amber:#f59e0b;
+  --rose:#f43f5e;
+  --violet:#8b5cf6;
+  --ink0:#050814;
+  --ink1:#0f172a;
+  --ink2:#1e293b;
+  --ink3:#475569;
+  --ink4:#94a3b8;
+  --ink5:#cbd5e1;
+  --ink6:#e2e8f0;
+  --bg:#f0f2f9;
+  --bg2:#f8faff;
+  --white:#fff;
+  --border:rgba(15,23,42,.07);
+  --border2:rgba(15,23,42,.12);
+  --sh0:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+  --sh1:0 4px 16px rgba(15,23,42,.07),0 1px 4px rgba(15,23,42,.04);
+  --sh2:0 12px 40px rgba(15,23,42,.10),0 4px 12px rgba(15,23,42,.06);
+  --sh3:0 24px 72px rgba(15,23,42,.14),0 8px 24px rgba(15,23,42,.08);
+  --r:18px;--r2:13px;--r3:10px;
+  --ff:'Cabinet Grotesk',sans-serif;
+  --fs:'Instrument Serif',serif;
+  --mono:'DM Mono',monospace;
 }
 
-/* ══ SIDEBAR ══ */
-.adm .adm-sb {
-  width: 248px; flex-shrink: 0;
-  background: var(--sidebar);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  position: sticky; top: 0; height: auto;
-  overflow: hidden;
-  box-shadow: 2px 0 12px rgba(15,23,42,0.04);
+.adm2{
+  display:flex;min-height:100vh;
+  font-family:var(--ff);font-size:13.5px;
+  background:var(--bg);color:var(--ink2);
 }
 
-.adm .adm-sb-top-accent {
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--violet), var(--teal));
-  flex-shrink: 0;
+/* ═══ SIDEBAR ═══ */
+.adm2 .sb{
+  width:260px;flex-shrink:0;
+  background:var(--white);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:sticky;top:0;height:100vh;
+  overflow:hidden;
+  box-shadow:2px 0 16px rgba(15,23,42,.04);
+}
+.adm2 .sb-accent{
+  height:3px;
+  background:linear-gradient(90deg,var(--p),var(--violet),var(--sky));
 }
 
-.adm .adm-profile {
-  padding: 22px 18px 18px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: 12px;
+/* ─ Profil animé ─ */
+.adm2 .sb-profile{
+  padding:26px 20px 22px;
+  border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
 }
-.adm .adm-av-ring {
-  padding: 2px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--violet));
-  display: inline-flex; flex-shrink: 0;
+.adm2 .av-stage{
+  position:relative;width:90px;height:90px;
+  display:flex;align-items:center;justify-content:center;
 }
-.adm .adm-av {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 800; color: var(--primary);
-  letter-spacing: -.3px;
+.adm2 .av-ring1{
+  position:absolute;inset:0;border-radius:50%;
+  border:1.5px dashed rgba(99,102,241,.22);
+  animation:adm2-spin 13s linear infinite;
 }
-.adm .adm-profile-info { flex: 1; min-width: 0; }
-.adm .adm-name {
-  font-size: 13px; font-weight: 700; color: var(--ink1);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.adm2 .av-ring2{
+  position:absolute;inset:-7px;border-radius:50%;
+  border:1px dashed rgba(139,92,246,.16);
+  animation:adm2-spin 19s linear infinite reverse;
 }
-.adm .adm-chip {
-  display: inline-block; margin-top: 3px;
-  font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--primary); background: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  padding: 2px 8px; border-radius: 20px;
+.adm2 .av-ring3{
+  position:absolute;inset:-14px;border-radius:50%;
+  border:1px dashed rgba(244,63,94,.1);
+  animation:adm2-spin 27s linear infinite;
+}
+.adm2 .av-sat{
+  position:absolute;border-radius:50%;
+  top:50%;transform:translateY(-50%);
+}
+.adm2 .av-sat1{width:7px;height:7px;left:-3px;background:var(--p);box-shadow:0 0 8px rgba(99,102,241,.65);}
+.adm2 .av-sat2{width:7px;height:7px;right:-3px;left:auto;background:var(--violet);box-shadow:0 0 8px rgba(139,92,246,.65);}
+.adm2 .av-sat3{width:5px;height:5px;left:50%;transform:translate(-50%,-200%);background:var(--rose);box-shadow:0 0 7px rgba(244,63,94,.65);}
+@keyframes adm2-spin{to{transform:rotate(360deg);}}
+
+.adm2 .av-core{
+  position:relative;z-index:2;
+  width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fs);font-size:22px;font-style:italic;color:#fff;
+  background:linear-gradient(145deg,#4f46e5,#7c3aed 50%,#f43f5e);
+  box-shadow:0 0 0 4px rgba(99,102,241,.12),0 8px 24px rgba(99,102,241,.35);
+}
+.adm2 .av-status{
+  position:absolute;bottom:4px;right:4px;z-index:3;
+  width:13px;height:13px;border-radius:50%;
+  background:var(--em);border:2.5px solid #fff;
+  box-shadow:0 0 8px rgba(16,185,129,.5);
+  animation:adm2-pulse 2.5s ease-in-out infinite;
+}
+@keyframes adm2-pulse{
+  0%,100%{box-shadow:0 0 8px rgba(16,185,129,.5);}
+  50%{box-shadow:0 0 14px rgba(16,185,129,.85);}
 }
 
-.adm .adm-nav { flex: 1; padding: 14px 10px 10px; overflow-y: auto; }
-.adm .adm-grp {
-  font-size: 8px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-  color: var(--ink5); padding: 10px 12px 5px;
+.adm2 .sb-name{
+  font-family:var(--fs);font-size:16px;font-style:italic;
+  color:var(--ink1);text-align:center;line-height:1.2;
 }
-.adm .adm-ni {
-  display: flex; align-items: center; gap: 9px; padding: 9px 12px;
-  border-radius: var(--r3); cursor: pointer;
-  font-size: 12.5px; font-weight: 500; color: var(--ink3);
-  transition: all .18s; margin-bottom: 1px; user-select: none; position: relative;
-}
-.adm .adm-ni:hover { background: var(--primary-light); color: var(--primary); }
-.adm .adm-ni.on {
-  background: var(--primary-light); color: var(--primary); font-weight: 700;
-}
-.adm .adm-ni.on::before {
-  content: ''; position: absolute; left: 0; top: 18%; bottom: 18%;
-  width: 3px; border-radius: 0 3px 3px 0;
-  background: linear-gradient(to bottom, var(--primary), var(--violet));
-}
-.adm .adm-ni-ico {
-  width: 28px; height: 28px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  background: rgba(15,23,42,0.04); transition: all .18s; color: var(--ink3);
-}
-.adm .adm-ni:hover .adm-ni-ico,
-.adm .adm-ni.on .adm-ni-ico {
-  background: rgba(99,102,241,0.12); color: var(--primary);
-}
-.adm .adm-ni-badge {
-  margin-left: auto; font-size: 10px; font-weight: 700;
-  background: var(--rose); color: #fff; padding: 1px 6px; border-radius: 20px;
-  min-width: 20px; text-align: center;
-}
-.adm .adm-sep { height: 1px; background: var(--border); margin: 6px 12px; }
-.adm .adm-sb-ft { padding: 8px 10px 18px; border-top: 1px solid var(--border); }
-
-/* ══ MAIN ══ */
-.adm .adm-main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
-
-/* ══ TOPBAR ══ */
-.adm .adm-topbar {
-  display: flex; align-items: center; gap: 10px; padding: 0 24px; height: 62px;
-  background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 40; backdrop-filter: blur(20px); flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(15,23,42,0.06);
-}
-.adm .adm-topbar-title {
-  flex: 1; font-size: 15.5px; font-weight: 800;
-  letter-spacing: -.3px; color: var(--ink1);
-  display: flex; align-items: center; gap: 8px;
-}
-.adm .adm-crumb {
-  font-size: 10px; color: var(--ink4); font-weight: 500;
-  background: var(--bg); padding: 2px 9px; border-radius: 20px;
-  border: 1px solid var(--border); letter-spacing: .2px;
+.adm2 .sb-role{font-size:10.5px;color:var(--ink4);text-align:center;margin-top:1px;}
+.adm2 .sb-chip{
+  font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--rose);background:rgba(244,63,94,.08);
+  border:1px solid rgba(244,63,94,.2);
+  padding:3px 10px;border-radius:20px;
 }
 
-.adm .adm-srch {
-  display: flex; align-items: center; gap: 8px; background: var(--bg);
-  border: 1.5px solid var(--border); border-radius: var(--r2);
-  padding: 7px 12px; width: 200px; transition: all .22s;
+/* ─ Nav ─ */
+.adm2 .sb-nav{flex:1;padding:14px 10px;overflow-y:auto;}
+.adm2 .sb-grp{
+  font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ink5);padding:10px 12px 5px;
 }
-.adm .adm-srch:focus-within {
-  border-color: var(--primary-border);
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.07);
-  background: var(--white); width: 240px;
+.adm2 .sb-ni{
+  display:flex;align-items:center;gap:9px;padding:9px 13px;
+  border-radius:10px;cursor:pointer;
+  font-size:12.5px;font-weight:600;color:var(--ink3);
+  transition:all .18s;margin-bottom:1px;position:relative;
 }
-.adm .adm-srch input {
-  background: none; border: none; outline: none;
-  font-size: 12.5px; font-family: var(--font); color: var(--ink2); width: 100%;
+.adm2 .sb-ni:hover{background:var(--pl);color:var(--p);}
+.adm2 .sb-ni.on{background:var(--pl);color:var(--p);font-weight:700;}
+.adm2 .sb-ni.on::before{
+  content:'';position:absolute;left:0;top:18%;bottom:18%;
+  width:3px;border-radius:0 3px 3px 0;
+  background:linear-gradient(to bottom,var(--p),var(--violet));
 }
-.adm .adm-srch input::placeholder { color: var(--ink5); }
+.adm2 .sb-ni-ico{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(15,23,42,.04);transition:all .18s;
+}
+.adm2 .sb-ni.on .sb-ni-ico,.adm2 .sb-ni:hover .sb-ni-ico{
+  background:rgba(99,102,241,.12);color:var(--p);
+}
+.adm2 .sb-badge{
+  margin-left:auto;font-size:10px;font-weight:700;
+  background:var(--rose);color:#fff;padding:1px 6px;
+  border-radius:20px;min-width:20px;text-align:center;
+}
+.adm2 .sb-sep{height:1px;background:var(--border);margin:8px 12px;}
+.adm2 .sb-ft{padding:8px 10px 20px;border-top:1px solid var(--border);}
 
-.adm .adm-role-filter {
-  display: flex; align-items: center; gap: 7px; background: var(--bg);
-  border: 1.5px solid var(--border); border-radius: var(--r2);
-  padding: 7px 11px; cursor: pointer; transition: all .2s;
-}
-.adm .adm-role-filter:hover { border-color: var(--primary-border); }
-.adm .adm-role-filter select {
-  background: transparent; border: none; outline: none;
-  font-size: 12px; font-family: var(--font); color: var(--ink2);
-  cursor: pointer; appearance: none; min-width: 90px;
-}
-.adm .adm-count-pill {
-  font-size: 11px; color: var(--primary); font-weight: 700;
-  background: var(--primary-light); border: 1px solid var(--primary-border);
-  border-radius: 20px; padding: 3px 10px; white-space: nowrap;
-}
-.adm .adm-top-date {
-  font-size: 10.5px; color: var(--ink4); background: var(--bg);
-  border: 1px solid var(--border); border-radius: var(--r2);
-  padding: 5px 10px; white-space: nowrap; font-family: var(--mono); letter-spacing: .3px;
-}
+/* ═══ MAIN ═══ */
+.adm2 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
 
-/* ══ BUTTONS ══ */
-.adm .btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 15px; border-radius: var(--r2);
-  font-size: 12px; font-weight: 700; font-family: var(--font);
-  cursor: pointer; border: none; transition: all .18s; white-space: nowrap;
+/* ─ Topbar ─ */
+.adm2 .topbar{
+  display:flex;align-items:center;gap:10px;padding:0 26px;height:64px;
+  background:rgba(255,255,255,.96);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:40;backdrop-filter:blur(20px);
+  box-shadow:0 1px 4px rgba(15,23,42,.06);flex-shrink:0;
 }
-.adm .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--violet));
-  color: #fff; box-shadow: 0 2px 12px rgba(99,102,241,0.25);
+.adm2 .topbar-title{
+  flex:1;font-size:16px;font-weight:800;letter-spacing:-.3px;color:var(--ink1);
+  display:flex;align-items:center;gap:8px;
 }
-.adm .btn-primary:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,102,241,0.35); }
-.adm .btn-teal { background: linear-gradient(135deg, var(--green), var(--teal)); color: #fff; box-shadow: 0 2px 10px rgba(16,185,129,0.2); }
-.adm .btn-teal:hover { opacity: .9; transform: translateY(-1px); }
-.adm .btn-ghost {
-  background: var(--bg); border: 1.5px solid var(--border); color: var(--ink3);
+.adm2 .crumb{
+  font-size:10px;color:var(--ink4);font-weight:500;
+  background:var(--bg);padding:2px 9px;border-radius:20px;border:1px solid var(--border);
 }
-.adm .btn-ghost:hover { border-color: var(--primary-border); color: var(--primary); background: var(--primary-light); }
-.adm .btn-danger { background: rgba(244,63,94,0.06); color: var(--rose); border: 1px solid rgba(244,63,94,0.18); }
-.adm .btn-danger:hover { background: var(--rose); color: #fff; }
+.adm2 .srch{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r2);padding:7px 12px;width:210px;transition:all .22s;
+}
+.adm2 .srch:focus-within{
+  border-color:var(--pb);box-shadow:0 0 0 3px rgba(99,102,241,.07);
+  background:#fff;width:250px;
+}
+.adm2 .srch input{background:none;border:none;outline:none;font-size:12.5px;font-family:var(--ff);color:var(--ink2);width:100%;}
+.adm2 .srch input::placeholder{color:var(--ink5);}
 
-/* ══ BELL ══ */
-.adm .bell-wrap { position: relative; }
-.adm .bell-btn {
-  width: 38px; height: 38px; border-radius: var(--r2);
-  background: var(--bg); border: 1.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink3); transition: all .18s;
+.adm2 .role-filter{
+  display:flex;align-items:center;gap:7px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r2);padding:7px 11px;cursor:pointer;transition:all .2s;
 }
-.adm .bell-btn:hover { border-color: var(--primary-border); color: var(--primary); background: var(--primary-light); }
-.adm .bell-dot {
-  position: absolute; top: -5px; right: -5px;
-  background: var(--rose); color: #fff; border-radius: 50%;
-  width: 18px; height: 18px; font-size: 9.5px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px solid var(--white);
+.adm2 .role-filter:hover{border-color:var(--pb);}
+.adm2 .role-filter select{
+  background:transparent;border:none;outline:none;
+  font-size:12px;font-family:var(--ff);color:var(--ink2);
+  cursor:pointer;appearance:none;min-width:90px;
 }
-.adm .notif-panel {
-  position: absolute; right: 0; top: 48px; width: 320px;
-  background: var(--white); border: 1px solid var(--border2);
-  border-radius: var(--r); box-shadow: var(--shadow-lg); z-index: 100; overflow: hidden;
+.adm2 .count-pill{
+  font-size:11px;color:var(--p);font-weight:700;
+  background:var(--pl);border:1px solid var(--pb);
+  border-radius:20px;padding:3px 10px;white-space:nowrap;
 }
-.adm .notif-head {
-  padding: 14px 18px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(139,92,246,0.02));
+.adm2 .top-date{
+  font-size:10.5px;color:var(--ink4);background:var(--bg);
+  border:1px solid var(--border);border-radius:var(--r2);
+  padding:5px 10px;white-space:nowrap;font-family:var(--mono);
 }
-.adm .notif-head-title { font-size: 13px; font-weight: 800; color: var(--ink1); }
-.adm .notif-item {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 11px 18px; border-bottom: 1px solid var(--border);
-  transition: background .15s; gap: 10px;
+.adm2 .bell-wrap{position:relative;}
+.adm2 .bell-btn{
+  width:38px;height:38px;border-radius:var(--r2);
+  background:var(--bg);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink4);transition:all .18s;
 }
-.adm .notif-item:hover { background: var(--bg); }
-.adm .notif-item:last-child { border-bottom: none; }
-.adm .notif-name { font-size: 12.5px; font-weight: 700; color: var(--ink1); }
-.adm .notif-sub { font-size: 10.5px; color: var(--ink4); margin-top: 2px; }
-.adm .approve-btn {
-  background: linear-gradient(135deg, var(--green), var(--teal)); color: #fff; border: none;
-  padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;
-  cursor: pointer; font-family: var(--font); white-space: nowrap; flex-shrink: 0;
-}
-.adm .approve-btn:hover { opacity: .85; }
-.adm .notif-empty { padding: 28px; text-align: center; color: var(--ink4); font-size: 13px; }
-
-/* ══ CONTENT ══ */
-.adm .adm-content {
-  flex: 1; padding: 22px 24px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: 20px;
+.adm2 .bell-btn:hover{border-color:var(--pb);color:var(--p);}
+.adm2 .bell-dot{
+  position:absolute;top:-5px;right:-5px;
+  background:var(--rose);color:#fff;border-radius:50%;
+  width:18px;height:18px;font-size:9.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #fff;
 }
 
-/* ══ BANNER ══ */
-.adm .adm-banner {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #0ea5e9 100%);
-  border-radius: var(--r); padding: 28px 30px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(79,70,229,0.28);
+/* Notif panel */
+.adm2 .notif-panel{
+  position:absolute;right:0;top:48px;width:320px;
+  background:var(--white);border:1px solid var(--border2);
+  border-radius:var(--r);box-shadow:var(--sh3);z-index:100;overflow:hidden;
 }
-.adm .adm-banner-pattern {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.07) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+.adm2 .notif-head{
+  padding:14px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(139,92,246,.02));
 }
-.adm .adm-banner-dots {
-  position: absolute; right: 200px; top: 0; bottom: 0; width: 200px; pointer-events: none;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
-  background-size: 18px 18px;
+.adm2 .notif-head-title{font-size:13px;font-weight:800;color:var(--ink1);}
+.adm2 .notif-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 18px;border-bottom:1px solid var(--border);
+  transition:background .15s;gap:10px;
 }
-.adm .adm-banner-left { position: relative; z-index: 1; }
-.adm .adm-banner-eyebrow {
-  font-size: 9.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
-  color: rgba(255,255,255,0.65); margin-bottom: 7px;
-  display: flex; align-items: center; gap: 6px;
+.adm2 .notif-item:hover{background:var(--bg);}
+.adm2 .notif-item:last-child{border-bottom:none;}
+.adm2 .notif-name{font-size:12.5px;font-weight:700;color:var(--ink1);}
+.adm2 .notif-sub{font-size:10.5px;color:var(--ink4);margin-top:2px;}
+.adm2 .approve-btn{
+  background:linear-gradient(135deg,var(--em),var(--sky));color:#fff;border:none;
+  padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;
+  cursor:pointer;font-family:var(--ff);white-space:nowrap;flex-shrink:0;
 }
-.adm .adm-banner-title {
-  font-size: 26px; font-weight: 800; color: #fff;
-  letter-spacing: -.5px; margin-bottom: 5px;
-}
-.adm .adm-banner-sub { font-size: 13px; color: rgba(255,255,255,0.55); }
-.adm .adm-banner-right {
-  position: relative; z-index: 1; display: flex; gap: 2px;
-  background: rgba(255,255,255,0.1); border-radius: var(--r2);
-  border: 1px solid rgba(255,255,255,0.15); overflow: hidden; backdrop-filter: blur(8px);
-}
-.adm .adm-bstat { padding: 16px 22px; text-align: center; border-right: 1px solid rgba(255,255,255,0.12); }
-.adm .adm-bstat:last-child { border-right: none; }
-.adm .adm-bsv { font-size: 30px; font-weight: 800; color: #fff; letter-spacing: -1.5px; line-height: 1; }
-.adm .adm-bsl { font-size: 9.5px; color: rgba(255,255,255,0.5); margin-top: 5px; letter-spacing: .7px; text-transform: uppercase; }
+.adm2 .approve-btn:hover{opacity:.85;}
+.adm2 .notif-empty{padding:28px;text-align:center;color:var(--ink4);font-size:13px;}
 
-/* ══ STAT CARDS ══ */
-.adm .adm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.adm .adm-stat {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 20px 20px 16px;
-  position: relative; overflow: hidden; transition: all .22s; cursor: default;
-  box-shadow: var(--shadow-sm);
+/* ─ Buttons ─ */
+.adm2 .btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--r2);
+  font-size:12px;font-weight:700;font-family:var(--ff);
+  cursor:pointer;border:none;transition:all .18s;white-space:nowrap;
 }
-.adm .adm-stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--primary-border); }
-.adm .adm-stat-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.adm .adm-stat-ico { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.adm .adm-stat-trend { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; font-family: var(--mono); }
-.adm .adm-stat-trend.up { background: rgba(16,185,129,0.1); color: var(--green); }
-.adm .adm-stat-lbl { font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink4); margin-bottom: 5px; }
-.adm .adm-stat-val { font-size: 30px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; margin-bottom: 4px; color: var(--ink1); }
-.adm .adm-stat-sub { font-size: 11px; color: var(--ink4); }
-.adm .adm-stat-stripe { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+.adm2 .btn-primary{
+  background:linear-gradient(135deg,var(--p),var(--violet));
+  color:#fff;box-shadow:0 2px 12px rgba(99,102,241,.25);
+}
+.adm2 .btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,.35);}
+.adm2 .btn-teal{background:linear-gradient(135deg,var(--em),var(--sky));color:#fff;box-shadow:0 2px 10px rgba(16,185,129,.2);}
+.adm2 .btn-teal:hover{opacity:.9;transform:translateY(-1px);}
+.adm2 .btn-ghost{background:var(--bg);border:1.5px solid var(--border);color:var(--ink3);}
+.adm2 .btn-ghost:hover{border-color:var(--pb);color:var(--p);background:var(--pl);}
 
-/* ══ CHARTS ══ */
-.adm .adm-charts { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; }
-.adm .adm-cc {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 20px 22px; box-shadow: var(--shadow-sm);
-}
-.adm .adm-cc-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
-.adm .adm-cc-title { font-size: 14px; font-weight: 800; color: var(--ink1); letter-spacing: -.2px; }
-.adm .adm-cc-sub { font-size: 11px; color: var(--ink4); margin-top: 2px; }
-.adm .adm-cc-pill { font-size: 9.5px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+/* ═══ CONTENT ═══ */
+.adm2 .content{flex:1;padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:22px;}
 
-/* ══ USER CARDS GRID ══ */
-.adm .adm-cards-wrap {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow-sm);
+/* ─ Banner ─ */
+.adm2 .banner{
+  background:linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#4338ca 70%,#0284c7 100%);
+  border-radius:var(--r);padding:30px 34px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+  box-shadow:0 12px 40px rgba(67,56,202,.3);
 }
-.adm .adm-cards-hd {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 22px; border-bottom: 1px solid var(--border);
-  flex-wrap: wrap; gap: 10px;
-  background: linear-gradient(135deg, rgba(99,102,241,0.02), rgba(139,92,246,0.01));
+.adm2 .banner-mesh{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 15% 85%,rgba(139,92,246,.22) 0%,transparent 45%),
+    radial-gradient(circle at 85% 15%,rgba(14,165,233,.18) 0%,transparent 45%);
 }
-.adm .adm-cards-title {
-  font-size: 14px; font-weight: 800; letter-spacing: -.2px; color: var(--ink1);
-  display: flex; align-items: center; gap: 8px;
+.adm2 .banner-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;
 }
-.adm .adm-tbl-ct {
-  font-size: 10px; color: var(--primary); font-weight: 700;
-  background: var(--primary-light); padding: 2px 9px;
-  border-radius: 20px; border: 1px solid var(--primary-border); font-family: var(--mono);
+.adm2 .banner-dots{
+  position:absolute;right:240px;top:0;bottom:0;width:160px;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(255,255,255,.13) 1.5px,transparent 1.5px);
+  background-size:16px 16px;
 }
-.adm .adm-cards-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px; padding: 18px 20px;
+.adm2 .banner-left{position:relative;z-index:1;}
+.adm2 .banner-eye{
+  font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:rgba(199,210,254,.7);margin-bottom:8px;display:flex;align-items:center;gap:6px;
 }
-.adm .adm-user-card {
-  background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: var(--r2); padding: 18px;
-  transition: all .22s; cursor: default; position: relative; overflow: hidden;
+.adm2 .banner-title{
+  font-family:var(--fs);font-size:30px;font-style:italic;
+  color:#fff;line-height:1.15;margin-bottom:6px;letter-spacing:-.3px;
 }
-.adm .adm-user-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md); border-color: var(--primary-border);
-  background: var(--white);
+.adm2 .banner-sub{font-size:13px;color:rgba(255,255,255,.45);}
+.adm2 .banner-right{
+  position:relative;z-index:1;display:flex;
+  background:rgba(255,255,255,.09);border-radius:var(--r2);
+  border:1px solid rgba(255,255,255,.14);overflow:hidden;backdrop-filter:blur(10px);
 }
-.adm .adm-user-card-top-bar {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: var(--r2) var(--r2) 0 0;
-}
-.adm .adm-user-card-head { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
-.adm .adm-uc-av {
-  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 800; color: #fff; letter-spacing: -.3px;
-}
-.adm .adm-uc-info { flex: 1; min-width: 0; }
-.adm .adm-uc-name {
-  font-size: 13px; font-weight: 700; color: var(--ink1);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.adm .adm-uc-num {
-  font-size: 10px; color: var(--ink4); margin-top: 2px;
-  font-family: var(--mono); letter-spacing: .2px;
-}
-.adm .adm-user-card-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.adm .adm-uc-meta-row {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 11.5px; color: var(--ink3);
-}
-.adm .adm-uc-meta-row svg { color: var(--ink4); flex-shrink: 0; }
-.adm .adm-user-card-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  padding-top: 12px; border-top: 1px solid var(--border);
-}
-.adm .adm-uc-badges { display: flex; gap: 5px; flex-wrap: wrap; }
-.adm .adm-uc-actions { display: flex; gap: 4px; }
-.adm .adm-ib {
-  width: 28px; height: 28px; border-radius: 8px;
-  border: 1.5px solid var(--border); background: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink4); transition: all .15s;
-}
-.adm .adm-ib:hover { border-color: var(--primary-border); color: var(--primary); background: var(--primary-light); }
-.adm .adm-ib.del:hover { border-color: rgba(244,63,94,0.3); color: var(--rose); background: rgba(244,63,94,0.06); }
-.adm .adm-ib.app:hover { border-color: rgba(16,185,129,0.3); color: var(--green); background: rgba(16,185,129,0.06); }
-.adm .adm-empty { padding: 52px 20px; text-align: center; color: var(--ink4); }
+.adm2 .bstat{padding:18px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.adm2 .bstat:last-child{border-right:none;}
+.adm2 .bsv{font-family:var(--ff);font-size:32px;font-weight:900;color:#fff;letter-spacing:-2px;line-height:1;}
+.adm2 .bsl{font-size:9.5px;color:rgba(255,255,255,.45);margin-top:5px;letter-spacing:.7px;text-transform:uppercase;}
 
-/* ══ BADGES ══ */
-.adm .adm-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; letter-spacing: .2px;
+/* ─ Stat cards ─ */
+.adm2 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.adm2 .stat{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:22px 20px 16px;
+  position:relative;overflow:hidden;transition:all .25s;
+  box-shadow:var(--sh0);
 }
-.adm .adm-badge::before { content: ''; width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
-.adm .b-approved { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
-.adm .b-approved::before { background: var(--green); }
-.adm .b-pending { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.2); }
-.adm .b-pending::before { background: var(--gold); }
-.adm .b-admin { background: rgba(244,63,94,0.1); color: var(--rose); border: 1px solid rgba(244,63,94,0.18); }
-.adm .b-admin::before { background: var(--rose); }
-.adm .b-alumni { background: rgba(99,102,241,0.1); color: var(--primary); border: 1px solid rgba(99,102,241,0.18); }
-.adm .b-alumni::before { background: var(--primary); }
-.adm .b-resp { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.18); }
-.adm .b-resp::before { background: var(--gold); }
+.adm2 .stat:hover{transform:translateY(-4px);box-shadow:var(--sh2);border-color:var(--pb);}
+.adm2 .stat-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.adm2 .stat-ico{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;}
+.adm2 .stat-trend{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;font-family:var(--mono);}
+.adm2 .stat-trend.up{background:rgba(16,185,129,.1);color:var(--em);}
+.adm2 .stat-lbl{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink4);margin-bottom:5px;}
+.adm2 .stat-val{font-size:32px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:4px;color:var(--ink0);}
+.adm2 .stat-sub{font-size:11px;color:var(--ink4);}
+.adm2 .stat-stripe{position:absolute;bottom:0;left:0;right:0;height:3px;}
 
-/* ══ STRUCT ══ */
-.adm .struct-wrap {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: var(--r); padding: 30px 32px; max-width: 520px;
-  box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+/* ─ Charts ─ */
+.adm2 .charts{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;}
+.adm2 .cc{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:22px 24px;box-shadow:var(--sh0);
 }
-.adm .struct-wrap::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--primary), var(--violet));
-}
-.adm .struct-eye { font-size: 9.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
-.adm .struct-title { font-size: 22px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 24px; color: var(--ink1); }
-.adm .struct-fld { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.adm .struct-fld label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); }
-.adm .struct-fld input, .adm .struct-fld select {
-  background: var(--bg); border: 1.5px solid var(--border);
-  border-radius: var(--r2); padding: 11px 14px;
-  font-size: 13px; font-family: var(--font); color: var(--ink1);
-  outline: none; transition: all .18s; width: 100%;
-}
-.adm .struct-fld input:focus, .adm .struct-fld select:focus {
-  border-color: var(--primary-border); box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
-  background: var(--white);
-}
-.adm .struct-fld input::placeholder { color: var(--ink5); }
-.adm .struct-fld select:disabled { opacity: .4; cursor: not-allowed; }
+.adm2 .cc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;}
+.adm2 .cc-title{font-size:14.5px;font-weight:800;color:var(--ink1);letter-spacing:-.2px;}
+.adm2 .cc-sub{font-size:11px;color:var(--ink4);margin-top:2px;}
+.adm2 .cc-pill{font-size:9.5px;font-weight:700;padding:3px 10px;border-radius:20px;}
 
-/* ══ MODAL ══ */
-.adm .adm-overlay {
-  position: fixed; inset: 0; background: rgba(15,23,42,0.45);
-  backdrop-filter: blur(8px); z-index: 200;
-  display: flex; align-items: center; justify-content: center;
+/* ═══ USER CARDS ═══ */
+.adm2 .cards-wrap{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;box-shadow:var(--sh0);
 }
-.adm .adm-modal {
-  background: var(--white); border: 1px solid var(--border2);
-  border-radius: 20px; width: 500px; max-height: 90vh;
-  display: flex; flex-direction: column; box-shadow: var(--shadow-lg); overflow: hidden;
+.adm2 .cards-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:10px;
+  background:linear-gradient(135deg,rgba(99,102,241,.025),rgba(139,92,246,.015));
 }
-.adm .adm-modal-hd {
-  padding: 22px 24px 18px; border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-start; justify-content: space-between;
-  background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(139,92,246,0.02));
+.adm2 .cards-title{
+  font-size:14.5px;font-weight:800;letter-spacing:-.2px;color:var(--ink1);
+  display:flex;align-items:center;gap:8px;
 }
-.adm .adm-modal-eye { font-size: 9.5px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--primary); margin-bottom: 5px; }
-.adm .adm-modal-ttl { font-size: 19px; font-weight: 800; letter-spacing: -.4px; color: var(--ink1); }
-.adm .adm-modal-x {
-  background: none; border: 1.5px solid var(--border); border-radius: 8px;
-  width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--ink4); transition: all .15s; margin-top: 2px;
+.adm2 .cards-ct{
+  font-size:10.5px;color:var(--p);font-weight:700;
+  background:var(--pl);padding:2px 9px;
+  border-radius:20px;border:1px solid var(--pb);font-family:var(--mono);
 }
-.adm .adm-modal-x:hover { border-color: rgba(244,63,94,0.3); color: var(--rose); background: rgba(244,63,94,0.06); }
-.adm .adm-modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 13px; }
-.adm .adm-modal-ft {
-  padding: 14px 24px; border-top: 1px solid var(--border);
-  display: flex; gap: 8px; justify-content: flex-end;
-  background: var(--bg);
+.adm2 .cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:14px;padding:18px 20px;
 }
-.adm .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.adm .fld { display: flex; flex-direction: column; gap: 5px; }
-.adm .fld label { font-size: 9.5px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); }
-.adm .fld input, .adm .fld select {
-  background: var(--bg); border: 1.5px solid var(--border);
-  border-radius: var(--r2); padding: 10px 13px;
-  font-size: 13px; font-family: var(--font); color: var(--ink1);
-  outline: none; transition: all .18s; width: 100%;
+.adm2 .cards-empty{
+  padding:56px 20px;text-align:center;color:var(--ink4);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
 }
-.adm .fld input:focus, .adm .fld select:focus {
-  border-color: var(--primary-border); box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
-  background: var(--white);
-}
-.adm .fld input:disabled, .adm .fld select:disabled { opacity: .4; cursor: not-allowed; }
-.adm .fld input::placeholder { color: var(--ink5); }
 
-/* ══ TOASTS ══ */
-.adm .adm-toasts {
-  position: fixed; bottom: 20px; right: 20px; z-index: 500;
-  display: flex; flex-direction: column; gap: 7px;
-  align-items: flex-end; pointer-events: none;
+/* ─ Chaque carte user ─ */
+.adm2 .user-card{
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:var(--r2);overflow:hidden;
+  transition:all .28s cubic-bezier(.4,0,.2,1);
+  position:relative;
 }
-.adm .adm-toast {
-  display: flex; align-items: center; gap: 9px;
-  background: var(--white); border: 1.5px solid var(--border2);
-  border-radius: 12px; padding: 11px 14px; min-width: 240px;
-  color: var(--ink2); font-size: 12.5px; box-shadow: var(--shadow-md); pointer-events: all;
+.adm2 .user-card:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--sh2);border-color:var(--pb);
+  background:var(--white);
 }
-.adm .adm-toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.adm .adm-toast-dot.success { background: var(--green); }
-.adm .adm-toast-dot.error { background: var(--rose); }
-.adm .adm-toast-dot.info { background: var(--gold); }
+.adm2 .uc-stripe{height:4px;}
+.adm2 .uc-body{padding:16px 16px 14px;}
+.adm2 .uc-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.adm2 .uc-av-wrap{position:relative;flex-shrink:0;}
+.adm2 .uc-av{
+  width:48px;height:48px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fs);font-size:17px;font-style:italic;color:#fff;
+  box-shadow:0 4px 12px rgba(99,102,241,.22);
+}
+.adm2 .uc-av-badge{
+  position:absolute;bottom:-3px;right:-3px;
+  width:15px;height:15px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(15,23,42,.12);
+  font-size:7px;font-weight:900;
+}
+.adm2 .uc-info{flex:1;min-width:0;}
+.adm2 .uc-name{
+  font-size:14px;font-weight:800;color:var(--ink1);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.2px;
+  margin-bottom:4px;
+}
+.adm2 .uc-num{
+  display:flex;align-items:center;gap:4px;
+  font-size:10.5px;color:var(--ink4);font-family:var(--mono);
+}
 
-@media (max-width: 1100px) {
-  .adm .adm-stats { grid-template-columns: repeat(2, 1fr); }
-  .adm .adm-charts { grid-template-columns: 1fr; }
+/* Lignes meta */
+.adm2 .uc-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:13px;}
+.adm2 .uc-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);}
+.adm2 .uc-row-ico{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--ink4);
 }
-@media (max-width: 768px) {
-  .adm .adm-sb { display: none; }
-  .adm .adm-cards-grid { grid-template-columns: 1fr; }
+.adm2 .uc-row-val{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
+
+/* Tags */
+.adm2 .uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px;}
+.adm2 .uc-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.15px;
+}
+.adm2 .uc-tag::before{content:'';width:5px;height:5px;border-radius:50%;}
+.adm2 .tag-ok{background:rgba(16,185,129,.09);color:var(--em);border:1px solid rgba(16,185,129,.2);}
+.adm2 .tag-ok::before{background:var(--em);}
+.adm2 .tag-pend{background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.2);}
+.adm2 .tag-pend::before{background:var(--amber);}
+.adm2 .tag-admin{background:rgba(244,63,94,.09);color:var(--rose);border:1px solid rgba(244,63,94,.18);}
+.adm2 .tag-admin::before{background:var(--rose);}
+.adm2 .tag-alumni{background:rgba(99,102,241,.09);color:var(--p);border:1px solid rgba(99,102,241,.18);}
+.adm2 .tag-alumni::before{background:var(--p);}
+.adm2 .tag-resp{background:rgba(245,158,11,.09);color:var(--amber);border:1px solid rgba(245,158,11,.18);}
+.adm2 .tag-resp::before{background:var(--amber);}
+
+/* Footer carte */
+.adm2 .uc-footer{
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:10px 16px;border-top:1px solid var(--border);
+  background:rgba(248,250,255,.7);gap:5px;
+}
+.adm2 .uc-btn{
+  width:30px;height:30px;border-radius:9px;
+  border:1.5px solid var(--border);background:none;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink4);transition:all .16s;
+}
+.adm2 .uc-btn:hover{border-color:var(--pb);color:var(--p);background:var(--pl);}
+.adm2 .uc-btn.del:hover{border-color:rgba(244,63,94,.3);color:var(--rose);background:rgba(244,63,94,.07);}
+.adm2 .uc-btn.app:hover{border-color:rgba(16,185,129,.3);color:var(--em);background:rgba(16,185,129,.07);}
+
+/* ─ Struct ─ */
+.adm2 .struct-wrap{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:30px 32px;max-width:520px;
+  box-shadow:var(--sh0);position:relative;overflow:hidden;
+}
+.adm2 .struct-wrap::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--p),var(--violet));
+}
+.adm2 .struct-eye{font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--p);margin-bottom:6px;}
+.adm2 .struct-title{font-family:var(--fs);font-size:22px;font-style:italic;letter-spacing:-.3px;margin-bottom:24px;color:var(--ink1);}
+.adm2 .struct-fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.adm2 .struct-fld label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+.adm2 .struct-fld input,.adm2 .struct-fld select{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:11px 14px;font-size:13px;font-family:var(--ff);color:var(--ink1);
+  outline:none;transition:all .18s;width:100%;
+}
+.adm2 .struct-fld input:focus,.adm2 .struct-fld select:focus{
+  border-color:var(--pb);box-shadow:0 0 0 3px rgba(99,102,241,.08);background:var(--white);
+}
+.adm2 .struct-fld input::placeholder{color:var(--ink5);}
+.adm2 .struct-fld select:disabled{opacity:.4;cursor:not-allowed;}
+
+/* ─ Modal ─ */
+.adm2 .overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.45);
+  backdrop-filter:blur(10px);z-index:300;
+  display:flex;align-items:center;justify-content:center;
+}
+.adm2 .modal{
+  background:#fff;border:1px solid var(--border2);
+  border-radius:22px;width:500px;max-height:90vh;
+  display:flex;flex-direction:column;box-shadow:var(--sh3);overflow:hidden;
+}
+.adm2 .modal-hd{
+  padding:22px 24px 18px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(99,102,241,.05),rgba(139,92,246,.03));
+}
+.adm2 .modal-eye{font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--p);margin-bottom:5px;}
+.adm2 .modal-ttl{font-family:var(--fs);font-size:19px;font-style:italic;color:var(--ink1);}
+.adm2 .modal-x{
+  background:none;border:1.5px solid var(--border);border-radius:9px;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink4);transition:all .15s;margin-top:2px;
+}
+.adm2 .modal-x:hover{border-color:rgba(244,63,94,.3);color:var(--rose);}
+.adm2 .modal-body{padding:20px 24px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:13px;}
+.adm2 .modal-ft{
+  padding:14px 24px;border-top:1px solid var(--border);
+  display:flex;gap:8px;justify-content:flex-end;background:var(--bg);
+}
+.adm2 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.adm2 .fld{display:flex;flex-direction:column;gap:5px;}
+.adm2 .fld label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+.adm2 .fld input,.adm2 .fld select{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:10px 13px;font-size:13px;font-family:var(--ff);color:var(--ink1);
+  outline:none;transition:all .18s;width:100%;
+}
+.adm2 .fld input:focus,.adm2 .fld select:focus{border-color:var(--pb);box-shadow:0 0 0 3px rgba(99,102,241,.08);background:#fff;}
+.adm2 .fld input:disabled,.adm2 .fld select:disabled{opacity:.4;cursor:not-allowed;}
+.adm2 .fld input::placeholder{color:var(--ink5);}
+
+/* ─ Toasts ─ */
+.adm2 .toasts{
+  position:fixed;bottom:22px;right:22px;z-index:600;
+  display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;
+}
+.adm2 .toast{
+  display:flex;align-items:center;gap:9px;
+  background:#fff;border:1.5px solid var(--border2);
+  border-radius:13px;padding:11px 15px;min-width:240px;
+  font-size:12.5px;font-weight:600;box-shadow:var(--sh2);pointer-events:all;color:var(--ink2);
+}
+.adm2 .td{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.adm2 .td.success{background:var(--em);}
+.adm2 .td.error{background:var(--rose);}
+.adm2 .td.info{background:var(--amber);}
+
+@media(max-width:1100px){
+  .adm2 .stats{grid-template-columns:repeat(2,1fr);}
+  .adm2 .charts{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .adm2 .sb{display:none;}
+  .adm2 .cards-grid{grid-template-columns:1fr;}
 }
 `;
 
-if (typeof document !== "undefined" && !document.getElementById("adm-css-light")) {
-  const s = document.createElement("style");
-  s.id = "adm-css-light"; s.textContent = CSS;
+if (typeof document !== "undefined" && !document.getElementById("adm2-css")) {
+  const s = document.createElement("style"); s.id = "adm2-css"; s.textContent = CSS;
   document.head.appendChild(s);
 }
 
 /* ─── PALETTE ─── */
 const C = {
-  primary: "#6366f1", violet: "#8b5cf6",
-  teal: "#0ea5e9", green: "#10b981",
-  gold: "#f59e0b", rose: "#f43f5e",
+  p: "#6366f1", violet: "#8b5cf6",
+  sky: "#0ea5e9", em: "#10b981",
+  amber: "#f59e0b", rose: "#f43f5e",
 };
-const PIE_COLORS = [C.primary, C.gold, C.rose];
-
+const PIE_COLORS = [C.p, C.amber, C.rose];
 const ROLE_LABEL   = { 1: "Admin", 2: "Alumni", 3: "Responsable" };
 const STATUS_LABEL = { approved: "Approuvé", pending: "En attente" };
-
 const AV_GRADS = [
-  "linear-gradient(135deg,#6366f1,#8b5cf6)",
-  "linear-gradient(135deg,#0ea5e9,#6366f1)",
-  "linear-gradient(135deg,#f59e0b,#f43f5e)",
-  "linear-gradient(135deg,#10b981,#0ea5e9)",
-  "linear-gradient(135deg,#8b5cf6,#ec4899)",
+  "linear-gradient(145deg,#6366f1,#8b5cf6)",
+  "linear-gradient(145deg,#0ea5e9,#6366f1)",
+  "linear-gradient(145deg,#f59e0b,#f43f5e)",
+  "linear-gradient(145deg,#10b981,#0ea5e9)",
+  "linear-gradient(145deg,#8b5cf6,#ec4899)",
 ];
 const avColor = id => AV_GRADS[(id || 0) % AV_GRADS.length];
-const initials = u =>
-  ((u?.first_name?.[0] || "") + (u?.last_name?.[0] || "")).toUpperCase() || "?";
+const initials = u => ((u?.first_name?.[0] || "") + (u?.last_name?.[0] || "")).toUpperCase() || "?";
 
-/* ─── TOAST HOOK ─── */
+/* ─── TOASTS ─── */
 function useToasts() {
   const [toasts, setToasts] = useState([]);
   const push = (msg, type = "info") => {
@@ -578,19 +620,17 @@ function useToasts() {
 
 function ToastStack({ toasts, remove }) {
   return (
-    <div className="adm-toasts">
+    <div className="toasts">
       <AnimatePresence>
         {toasts.map(t => (
-          <motion.div className="adm-toast" key={t.id}
+          <motion.div className="toast" key={t.id}
             initial={{ opacity: 0, x: 28, scale: .95 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: .2 }}>
-            <div className={`adm-toast-dot ${t.type}`} />
-            <span style={{ flex: 1, fontWeight: 600 }}>{t.msg}</span>
-            <span style={{ cursor: "pointer", color: "var(--ink4)" }} onClick={() => remove(t.id)}>
-              <X size={11} />
-            </span>
+            <div className={`td ${t.type}`} />
+            <span style={{ flex: 1 }}>{t.msg}</span>
+            <span style={{ cursor: "pointer", color: "var(--ink4)" }} onClick={() => remove(t.id)}><X size={11} /></span>
           </motion.div>
         ))}
       </AnimatePresence>
@@ -598,31 +638,28 @@ function ToastStack({ toasts, remove }) {
   );
 }
 
-/* ─── BADGES ─── */
-function StatusBadge({ status }) {
+/* ─── TOOLTIP ─── */
+const LightTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null;
   return (
-    <span className={`adm-badge ${status === "approved" ? "b-approved" : "b-pending"}`}>
-      {status === "approved" ? "Approuvé" : "En attente"}
-    </span>
+    <div style={{
+      background: "#fff", border: "1px solid rgba(15,23,42,.1)",
+      borderRadius: 10, padding: "8px 13px", fontSize: 11,
+      color: "#1e293b", boxShadow: "0 4px 16px rgba(15,23,42,.1)",
+    }}>
+      <div style={{ color: "#94a3b8", marginBottom: 3, fontWeight: 600 }}>{label}</div>
+      {payload.map((p, i) => <div key={i} style={{ color: p.color, fontWeight: 700 }}>{p.name}: {p.value}</div>)}
+    </div>
   );
-}
-function RoleBadge({ roleId }) {
-  const map = {
-    1: { cls: "b-admin",  label: "Admin" },
-    2: { cls: "b-alumni", label: "Alumni" },
-    3: { cls: "b-resp",   label: "Responsable" },
-  };
-  const r = map[roleId] || { cls: "b-alumni", label: "—" };
-  return <span className={`adm-badge ${r.cls}`}>{r.label}</span>;
-}
+};
 
 /* ─── NAV ITEM ─── */
 function NavItem({ icon: Icon, label, badge, active, onClick }) {
   return (
-    <div className={`adm-ni ${active ? "on" : ""}`} onClick={onClick}>
-      <div className="adm-ni-ico"><Icon size={14} strokeWidth={2} /></div>
+    <div className={`sb-ni ${active ? "on" : ""}`} onClick={onClick}>
+      <div className="sb-ni-ico"><Icon size={14} strokeWidth={2} /></div>
       {label}
-      {badge != null && <span className="adm-ni-badge">{badge}</span>}
+      {badge != null && <span className="sb-badge">{badge}</span>}
     </div>
   );
 }
@@ -630,17 +667,17 @@ function NavItem({ icon: Icon, label, badge, active, onClick }) {
 /* ─── STAT CARD ─── */
 function StatCard({ title, value, color, icon: Icon, sub, trend }) {
   return (
-    <div className="adm-stat">
-      <div className="adm-stat-top">
-        <div className="adm-stat-ico" style={{ background: color + "14", color }}>
-          <Icon size={17} strokeWidth={2} />
+    <div className="stat">
+      <div className="stat-top">
+        <div className="stat-ico" style={{ background: color + "14", color }}>
+          <Icon size={18} strokeWidth={2} />
         </div>
-        {trend != null && <span className="adm-stat-trend up">↑ {trend}%</span>}
+        {trend != null && <span className="stat-trend up">↑ {trend}%</span>}
       </div>
-      <div className="adm-stat-lbl">{title}</div>
-      <div className="adm-stat-val">{value ?? 0}</div>
-      <div className="adm-stat-sub">{sub}</div>
-      <div className="adm-stat-stripe" style={{ background: `linear-gradient(90deg,${color},transparent)` }} />
+      <div className="stat-lbl">{title}</div>
+      <div className="stat-val">{value ?? 0}</div>
+      <div className="stat-sub">{sub}</div>
+      <div className="stat-stripe" style={{ background: `linear-gradient(90deg,${color},transparent)` }} />
     </div>
   );
 }
@@ -648,15 +685,14 @@ function StatCard({ title, value, color, icon: Icon, sub, trend }) {
 /* ─── CHART CARD ─── */
 function ChartCard({ title, sub, badge, badgeColor, height = 220, children }) {
   return (
-    <div className="adm-cc">
-      <div className="adm-cc-head">
+    <div className="cc">
+      <div className="cc-head">
         <div>
-          <div className="adm-cc-title">{title}</div>
-          {sub && <div className="adm-cc-sub">{sub}</div>}
+          <div className="cc-title">{title}</div>
+          {sub && <div className="cc-sub">{sub}</div>}
         </div>
         {badge && (
-          <span className="adm-cc-pill"
-            style={{ background: (badgeColor || C.primary) + "14", color: badgeColor || C.primary }}>
+          <span className="cc-pill" style={{ background: (badgeColor || C.p) + "14", color: badgeColor || C.p }}>
             {badge}
           </span>
         )}
@@ -668,33 +704,20 @@ function ChartCard({ title, sub, badge, badgeColor, height = 220, children }) {
   );
 }
 
-/* ─── TOOLTIP ─── */
-const LightTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{
-      background: "#fff", border: "1px solid rgba(15,23,42,0.1)",
-      borderRadius: 10, padding: "8px 13px", fontSize: 11,
-      color: "#1e293b", boxShadow: "0 4px 16px rgba(15,23,42,0.1)",
-    }}>
-      <div style={{ color: "#94a3b8", marginBottom: 3, fontWeight: 600 }}>{label}</div>
-      {payload.map((p, i) => (
-        <div key={i} style={{ color: p.color, fontWeight: 700 }}>
-          {p.name}: {p.value}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-/* ─── USER CARDS LIST ─── */
+/* ─── USER CARDS PANEL ─── */
 function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, full }) {
+  const roleTagMap = {
+    1: { cls: "tag-admin",  label: "Admin" },
+    2: { cls: "tag-alumni", label: "Alumni" },
+    3: { cls: "tag-resp",   label: "Responsable" },
+  };
+
   return (
-    <div className="adm-cards-wrap">
-      <div className="adm-cards-hd">
-        <div className="adm-cards-title">
+    <div className="cards-wrap">
+      <div className="cards-hd">
+        <div className="cards-title">
           {full ? "Liste des utilisateurs" : "Derniers utilisateurs"}
-          <span className="adm-tbl-ct">{users.length} résultat{users.length !== 1 ? "s" : ""}</span>
+          <span className="cards-ct">{users.length} résultat{users.length !== 1 ? "s" : ""}</span>
         </div>
         <button className="btn btn-ghost" onClick={onExport}>
           <Download size={12} /> Exporter
@@ -702,67 +725,82 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
       </div>
 
       {users.length === 0 ? (
-        <div className="adm-empty">
-          <Users size={32} style={{ opacity: .15, marginBottom: 10, display: "block", margin: "0 auto 10px" }} />
-          <div style={{ fontSize: 13, color: "var(--ink4)" }}>Aucun utilisateur trouvé</div>
+        <div className="cards-empty">
+          <Users size={34} style={{ opacity: .12 }} />
+          <div style={{ fontSize: 13, fontWeight: 600 }}>Aucun utilisateur trouvé</div>
+          <div style={{ fontSize: 11, color: "var(--ink5)" }}>Modifiez vos critères de recherche</div>
         </div>
       ) : (
-        <div className="adm-cards-grid">
+        <div className="cards-grid">
           <AnimatePresence>
             {users.map((u, i) => {
               const grad = avColor(u.id);
-              const color = u.role_id === 1 ? C.rose : u.role_id === 3 ? C.gold : C.primary;
+              const colLine = u.role_id === 1 ? C.rose : u.role_id === 3 ? C.amber : C.p;
+              const approved = u.status === "approved";
+              const roleTag = roleTagMap[u.role_id] || { cls: "tag-alumni", label: "—" };
               return (
-                <motion.div className="adm-user-card" key={u.id}
-                  initial={{ opacity: 0, y: 10 }}
+                <motion.div className="user-card" key={u.id}
+                  initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: .18, delay: i * 0.03 }}>
+                  exit={{ opacity: 0, scale: .96 }}
+                  transition={{ duration: .2, delay: i * 0.025 }}>
 
-                  <div className="adm-user-card-top-bar"
-                    style={{ background: `linear-gradient(90deg, ${color}, ${color}55)` }} />
+                  {/* Stripe top couleur par rôle */}
+                  <div className="uc-stripe"
+                    style={{ background: `linear-gradient(90deg,${colLine},${colLine}55)` }} />
 
-                  <div className="adm-user-card-head">
-                    <div className="adm-uc-av" style={{ background: grad }}>{initials(u)}</div>
-                    <div className="adm-uc-info">
-                      <div className="adm-uc-name">{u.first_name} {u.last_name}</div>
-                      <div className="adm-uc-num">
-                        <Hash size={9} style={{ display: "inline", marginRight: 2 }} />
-                        {u.numero_dossier || "—"}
+                  <div className="uc-body">
+                    {/* Head */}
+                    <div className="uc-head">
+                      <div className="uc-av-wrap">
+                        <div className="uc-av" style={{ background: grad }}>{initials(u)}</div>
+                        <div className="uc-av-badge"
+                          style={{ color: approved ? "var(--em)" : "var(--amber)" }}>
+                          {approved ? "✓" : "~"}
+                        </div>
+                      </div>
+                      <div className="uc-info">
+                        <div className="uc-name">{u.first_name} {u.last_name}</div>
+                        <div className="uc-num">
+                          <Hash size={9} />
+                          {u.numero_dossier || "—"}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="adm-user-card-meta">
-                    <div className="adm-uc-meta-row">
-                      <Mail size={11} />
-                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {u.email}
+                    {/* Meta row email */}
+                    <div className="uc-rows">
+                      <div className="uc-row">
+                        <div className="uc-row-ico"><Mail size={11} /></div>
+                        <span className="uc-row-val">{u.email}</span>
+                      </div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="uc-tags">
+                      <span className={`uc-tag ${roleTag.cls}`}>{roleTag.label}</span>
+                      <span className={`uc-tag ${approved ? "tag-ok" : "tag-pend"}`}>
+                        {approved ? "Approuvé" : "En attente"}
                       </span>
                     </div>
                   </div>
 
-                  <div className="adm-user-card-foot">
-                    <div className="adm-uc-badges">
-                      <RoleBadge roleId={u.role_id} />
-                      <StatusBadge status={u.status} />
-                    </div>
-                    <div className="adm-uc-actions">
-                      <button className="adm-ib" title="Modifier" onClick={() => onEdit(u)}>
-                        <Edit size={11} />
+                  {/* Footer actions */}
+                  <div className="uc-footer">
+                    <button className="uc-btn" title="Modifier" onClick={() => onEdit(u)}>
+                      <Edit size={12} />
+                    </button>
+                    <button className="uc-btn del" title="Supprimer" onClick={() => onDelete(u.id)}>
+                      <Trash2 size={12} />
+                    </button>
+                    <button className="uc-btn" title="Voir profil" onClick={() => onView(u)}>
+                      <ChevronRight size={12} />
+                    </button>
+                    {u.status === "pending" && (
+                      <button className="uc-btn app" title="Approuver" onClick={() => onApprove(u.id)}>
+                        <UserCheck size={12} />
                       </button>
-                      <button className="adm-ib del" title="Supprimer" onClick={() => onDelete(u.id)}>
-                        <Trash2 size={11} />
-                      </button>
-                      <button className="adm-ib" title="Voir profil" onClick={() => onView(u)}>
-                        <ChevronRight size={11} />
-                      </button>
-                      {u.status === "pending" && (
-                        <button className="adm-ib app" title="Approuver" onClick={() => onApprove(u.id)}>
-                          <UserCheck size={11} />
-                        </button>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -777,20 +815,20 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
 /* ─── USER MODAL ─── */
 function UserModal({ title, form, setForm, ufrs, departements, filieres, onUfrChange, onDeptChange, onSave, onClose, saveLabel = "Enregistrer" }) {
   return (
-    <div className="adm-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <motion.div className="adm-modal"
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <motion.div className="modal"
         initial={{ opacity: 0, scale: .96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: .96 }}
         transition={{ duration: .2 }}>
-        <div className="adm-modal-hd">
+        <div className="modal-hd">
           <div>
-            <div className="adm-modal-eye">Gestion · Utilisateurs</div>
-            <div className="adm-modal-ttl">{title}</div>
+            <div className="modal-eye">Gestion · Utilisateurs</div>
+            <div className="modal-ttl">{title}</div>
           </div>
-          <button className="adm-modal-x" onClick={onClose}><X size={13} /></button>
+          <button className="modal-x" onClick={onClose}><X size={13} /></button>
         </div>
-        <div className="adm-modal-body">
+        <div className="modal-body">
           <div className="row2">
             <div className="fld"><label>Prénom</label>
               <input value={form.first_name || ""} placeholder="Amina"
@@ -836,7 +874,7 @@ function UserModal({ title, form, setForm, ufrs, departements, filieres, onUfrCh
               </select></div>
           </div>
         </div>
-        <div className="adm-modal-ft">
+        <div className="modal-ft">
           <button className="btn btn-ghost" onClick={onClose}>Annuler</button>
           <button className="btn btn-primary" onClick={onSave}>{saveLabel}</button>
         </div>
@@ -849,20 +887,20 @@ function UserModal({ title, form, setForm, ufrs, departements, filieres, onUfrCh
 function ProfileModal({ profile, setProfile, onSave, onClose }) {
   if (!profile) return null;
   return (
-    <div className="adm-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <motion.div className="adm-modal"
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <motion.div className="modal"
         initial={{ opacity: 0, scale: .96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: .2 }}>
-        <div className="adm-modal-hd">
+        <div className="modal-hd">
           <div>
-            <div className="adm-modal-eye">Profil utilisateur</div>
-            <div className="adm-modal-ttl">{profile.first_name} {profile.last_name}</div>
+            <div className="modal-eye">Profil utilisateur</div>
+            <div className="modal-ttl">{profile.first_name} {profile.last_name}</div>
           </div>
-          <button className="adm-modal-x" onClick={onClose}><X size={13} /></button>
+          <button className="modal-x" onClick={onClose}><X size={13} /></button>
         </div>
-        <div className="adm-modal-body">
+        <div className="modal-body">
           <div className="row2">
             <div className="fld"><label>Prénom</label>
               <input value={profile.first_name || ""}
@@ -883,7 +921,7 @@ function ProfileModal({ profile, setProfile, onSave, onClose }) {
                 onChange={e => setProfile({ ...profile, profile: { ...profile.profile, job_title: e.target.value } })} /></div>
           </div>
         </div>
-        <div className="adm-modal-ft">
+        <div className="modal-ft">
           <button className="btn btn-ghost" onClick={onClose}>Fermer</button>
           <button className="btn btn-teal" onClick={onSave}>Sauvegarder</button>
         </div>
@@ -894,21 +932,19 @@ function ProfileModal({ profile, setProfile, onSave, onClose }) {
 
 /* ─── STRUCT VIEW ─── */
 function StructView({ type, ufrs, ufrForm, setUfrForm, deptForm, setDeptForm, filiereForm, setFiliereForm, onCreateUfr, onCreateDept, onCreateFiliere }) {
-  const API = import.meta.env.VITE_API_URL;
   const [filUfrDepts, setFilUfrDepts] = useState([]);
 
-  const loadDeptsByUfr = async (ufrId, setter) => {
-    if (!ufrId) { setter([]); return; }
+  const loadDeptsByUfr = async (ufrId) => {
+    if (!ufrId) { setFilUfrDepts([]); return; }
     try {
       const res = await axios.get(`${API}/api/departements-by-ufr/${ufrId}`);
-      setter(res.data);
-    } catch { setter([]); }
+      setFilUfrDepts(res.data);
+    } catch { setFilUfrDepts([]); }
   };
 
   const configs = {
     ufr: {
       eye: "Structure Académique", title: "Nouvelle UFR",
-      color: C.green,
       fields: (
         <div className="struct-fld">
           <label>Nom de l'UFR</label>
@@ -921,13 +957,11 @@ function StructView({ type, ufrs, ufrForm, setUfrForm, deptForm, setDeptForm, fi
     },
     departement: {
       eye: "Structure Académique", title: "Nouveau Département",
-      color: C.primary,
       fields: (
         <>
           <div className="struct-fld">
             <label>Nom du département</label>
-            <input placeholder="ex : Informatique"
-              value={deptForm.nom || ""}
+            <input placeholder="ex : Informatique" value={deptForm.nom || ""}
               onChange={e => setDeptForm({ ...deptForm, nom: e.target.value })} />
           </div>
           <div className="struct-fld">
@@ -944,21 +978,16 @@ function StructView({ type, ufrs, ufrForm, setUfrForm, deptForm, setDeptForm, fi
     },
     filiere: {
       eye: "Structure Académique", title: "Nouvelle Filière",
-      color: C.gold,
       fields: (
         <>
           <div className="struct-fld">
             <label>Nom de la filière</label>
-            <input placeholder="ex : Génie Logiciel"
-              value={filiereForm.nom || ""}
+            <input placeholder="ex : Génie Logiciel" value={filiereForm.nom || ""}
               onChange={e => setFiliereForm({ ...filiereForm, nom: e.target.value })} />
           </div>
           <div className="struct-fld">
             <label>UFR (pour filtrer)</label>
-            <select onChange={e => {
-              setFiliereForm({ ...filiereForm, departement_id: "" });
-              loadDeptsByUfr(e.target.value, setFilUfrDepts);
-            }}>
+            <select onChange={e => { setFiliereForm({ ...filiereForm, departement_id: "" }); loadDeptsByUfr(e.target.value); }}>
               <option value="">Choisir une UFR</option>
               {ufrs.map(u => <option key={u.id} value={u.id}>{u.nom}</option>)}
             </select>
@@ -985,7 +1014,7 @@ function StructView({ type, ufrs, ufrForm, setUfrForm, deptForm, setDeptForm, fi
     <motion.div className="struct-wrap"
       initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .25 }}>
       <div className="struct-eye">{cfg.eye}</div>
-      <div className="struct-title" style={{ color: cfg.color }}>{cfg.title}</div>
+      <div className="struct-title">{cfg.title}</div>
       {cfg.fields}
       <div style={{ marginTop: 8 }}>
         <button className="btn btn-primary" onClick={cfg.action}>{cfg.label}</button>
@@ -994,11 +1023,10 @@ function StructView({ type, ufrs, ufrForm, setUfrForm, deptForm, setDeptForm, fi
   );
 }
 
-/* ═══════════════════════════════════════
+/* ════════════════════════════════════════
    ROOT COMPONENT
-═══════════════════════════════════════ */
+════════════════════════════════════════ */
 export default function AdminDashboard() {
-  const API     = import.meta.env.VITE_API_URL;
   const token   = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
   const navigate = useNavigate();
@@ -1027,7 +1055,6 @@ export default function AdminDashboard() {
   const [view,         setView]         = useState("dashboard");
 
   const adminName     = localStorage.getItem("admin_name") || "Super Admin";
-  const adminEmail    = localStorage.getItem("admin_email") || "";
   const adminInitials = adminName.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase() || "SA";
 
   const [form, setForm] = useState({
@@ -1039,10 +1066,8 @@ export default function AdminDashboard() {
   useEffect(() => { load(); fetchUfrs(); }, []);
 
   const fetchUfrs = async () => {
-    try {
-      const res = await axios.get(`${API}/api/ufrs`);
-      setUfrs(res.data);
-    } catch { toast("Erreur chargement UFR", "error"); }
+    try { const r = await axios.get(`${API}/api/ufrs`); setUfrs(r.data); }
+    catch { toast("Erreur chargement UFR", "error"); }
   };
 
   const load = async () => {
@@ -1057,9 +1082,7 @@ export default function AdminDashboard() {
       setGrowth(g.data);
       setUsers(u.data.data ?? u.data ?? []);
       setPendingUsers(p.data.pending_alumni ?? p.data ?? []);
-    } catch (err) {
-      toast("Erreur de chargement des données", "error");
-    }
+    } catch { toast("Erreur de chargement des données", "error"); }
   };
 
   const handleUfrChange = async (id) => {
@@ -1067,31 +1090,28 @@ export default function AdminDashboard() {
     setDepartements([]); setFilieres([]);
     if (!id) return;
     try { const r = await axios.get(`${API}/api/departements-by-ufr/${id}`); setDepartements(r.data); }
-    catch { toast("Erreur chargement départements", "error"); }
+    catch {}
   };
-
   const handleDeptChange = async (id) => {
     setForm(f => ({ ...f, departement_id: id, filiere_id: "" }));
     setFilieres([]);
     if (!id) return;
     try { const r = await axios.get(`${API}/api/filieres-by-departement/${id}`); setFilieres(r.data); }
-    catch { toast("Erreur chargement filières", "error"); }
+    catch {}
   };
-
   const handleEditUfrChange = async (id) => {
     setSelectedUser(u => ({ ...u, ufr_id: id, departement_id: "", filiere_id: "" }));
     setEditDepts([]); setEditFilieres([]);
     if (!id) return;
     try { const r = await axios.get(`${API}/api/departements-by-ufr/${id}`); setEditDepts(r.data); }
-    catch { toast("Erreur chargement départements", "error"); }
+    catch {}
   };
-
   const handleEditDeptChange = async (id) => {
     setSelectedUser(u => ({ ...u, departement_id: id, filiere_id: "" }));
     setEditFilieres([]);
     if (!id) return;
     try { const r = await axios.get(`${API}/api/filieres-by-departement/${id}`); setEditFilieres(r.data); }
-    catch { toast("Erreur chargement filières", "error"); }
+    catch {}
   };
 
   const openEdit = async (user) => {
@@ -1142,7 +1162,7 @@ export default function AdminDashboard() {
   const updateUser = async () => {
     try {
       await axios.put(`${API}/api/admin/update/${selectedUser.id}`, selectedUser, { headers });
-      setEditOpen(false); setSelectedUser(null); setEditDepts([]); setEditFilieres([]);
+      setEditOpen(false); setSelectedUser(null);
       load(); toast("Utilisateur modifié.", "success");
     } catch { toast("Erreur modification", "error"); }
   };
@@ -1164,26 +1184,18 @@ export default function AdminDashboard() {
 
   const createUfr = async () => {
     if (!ufrForm.nom?.trim()) { toast("Nom de l'UFR requis", "error"); return; }
-    try {
-      await axios.post(`${API}/api/ufrs`, ufrForm, { headers });
-      setUfrForm({ nom: "" }); fetchUfrs(); toast("UFR créée avec succès.", "success");
-    } catch { toast("Erreur création UFR", "error"); }
+    try { await axios.post(`${API}/api/ufrs`, ufrForm, { headers }); setUfrForm({ nom: "" }); fetchUfrs(); toast("UFR créée.", "success"); }
+    catch { toast("Erreur création UFR", "error"); }
   };
-
   const createDepartement = async () => {
     if (!deptForm.nom?.trim() || !deptForm.ufr_id) { toast("Nom et UFR requis", "error"); return; }
-    try {
-      await axios.post(`${API}/api/departements`, deptForm, { headers });
-      setDeptForm({ nom: "", ufr_id: "" }); toast("Département créé avec succès.", "success");
-    } catch { toast("Erreur création département", "error"); }
+    try { await axios.post(`${API}/api/departements`, deptForm, { headers }); setDeptForm({ nom: "", ufr_id: "" }); toast("Département créé.", "success"); }
+    catch { toast("Erreur création département", "error"); }
   };
-
   const createFiliere = async () => {
     if (!filiereForm.nom?.trim() || !filiereForm.departement_id) { toast("Nom et département requis", "error"); return; }
-    try {
-      await axios.post(`${API}/api/filieres`, filiereForm, { headers });
-      setFiliereForm({ nom: "", departement_id: "" }); toast("Filière créée avec succès.", "success");
-    } catch { toast("Erreur création filière", "error"); }
+    try { await axios.post(`${API}/api/filieres`, filiereForm, { headers }); setFiliereForm({ nom: "", departement_id: "" }); toast("Filière créée.", "success"); }
+    catch { toast("Erreur création filière", "error"); }
   };
 
   const exportExcel = () => {
@@ -1198,8 +1210,8 @@ export default function AdminDashboard() {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Utilisateurs");
     const label = roleFilter ? `_${ROLE_LABEL[roleFilter] || roleFilter}` : "";
-    const filename = `utilisateurs${label}_${new Date().toLocaleDateString("fr-FR").replace(/\//g, "-")}.xlsx`;
-    saveAs(new Blob([XLSX.write(wb, { bookType: "xlsx", type: "array" })]), filename);
+    saveAs(new Blob([XLSX.write(wb, { bookType: "xlsx", type: "array" })]),
+      `utilisateurs${label}_${new Date().toLocaleDateString("fr-FR").replace(/\//g, "-")}.xlsx`);
     toast(`Export téléchargé (${data.length} ligne${data.length > 1 ? "s" : ""})`, "success");
   };
 
@@ -1230,52 +1242,64 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="adm">
+    <div className="adm2">
 
       {/* ══ SIDEBAR ══ */}
-      <aside className="adm-sb" style={{ position: "relative" }}>
-        <div className="adm-sb-top-accent" />
-        <div className="adm-profile">
-          <div className="adm-av-ring">
-            <div className="adm-av">{adminInitials}</div>
+      <aside className="sb">
+        <div className="sb-accent" />
+
+        {/* Profil animé */}
+        <div className="sb-profile">
+          <div className="av-stage">
+            <div className="av-ring3">
+              <div className="av-sat" style={{ ...{ width:5, height:5, top:"15%", left:"50%", transform:"translate(-50%,-50%)", background:"var(--rose)", boxShadow:"0 0 7px rgba(244,63,94,.65)", borderRadius:"50%", position:"absolute" } }} />
+            </div>
+            <div className="av-ring2">
+              <div className="av-sat av-sat2" />
+            </div>
+            <div className="av-ring1">
+              <div className="av-sat av-sat1" />
+            </div>
+            <div className="av-core">{adminInitials}</div>
+            <div className="av-status" />
           </div>
-          <div className="adm-profile-info">
-            <div className="adm-name">{adminName}</div>
-            <div className="adm-chip">Admin</div>
-          </div>
+          <div className="sb-name">{adminName}</div>
+          <div className="sb-role">Administrateur système</div>
+          <div className="sb-chip">Admin</div>
         </div>
-        <nav className="adm-nav">
-          <div className="adm-grp">Principal</div>
+
+        <nav className="sb-nav">
+          <div className="sb-grp">Principal</div>
           <NavItem icon={LayoutDashboard} label="Tableau de bord" active={view === "dashboard"} onClick={() => setView("dashboard")} />
-          <NavItem icon={Users} label="Utilisateurs" active={view === "users"} onClick={() => setView("users")} badge={users.length || null} />
-          <NavItem icon={Bell} label="Notifications" badge={pendingUsers.length || null} active={false} onClick={() => setNotifOpen(o => !o)} />
-          <div className="adm-sep" />
-          <div className="adm-grp">Structure</div>
-          <NavItem icon={GraduationCap} label="UFR"          active={view === "ufr"}          onClick={() => setView("ufr")} />
-          <NavItem icon={Building2}     label="Département"  active={view === "departement"}  onClick={() => setView("departement")} />
-          <NavItem icon={BookOpen}      label="Filière"      active={view === "filiere"}      onClick={() => setView("filiere")} />
+          <NavItem icon={Users}   label="Utilisateurs" active={view === "users"}   onClick={() => setView("users")} badge={users.length || null} />
+          <NavItem icon={Bell}    label="Notifications" badge={pendingUsers.length || null} active={false} onClick={() => setNotifOpen(o => !o)} />
+          <div className="sb-sep" />
+          <div className="sb-grp">Structure</div>
+          <NavItem icon={GraduationCap} label="UFR"         active={view === "ufr"}         onClick={() => setView("ufr")} />
+          <NavItem icon={Building2}     label="Département" active={view === "departement"} onClick={() => setView("departement")} />
+          <NavItem icon={BookOpen}      label="Filière"     active={view === "filiere"}     onClick={() => setView("filiere")} />
         </nav>
-        <div className="adm-sb-ft">
+        <div className="sb-ft">
           <NavItem icon={LogOut} label="Déconnexion" active={false} onClick={() => navigate("/login")} />
         </div>
       </aside>
 
       {/* ══ MAIN ══ */}
-      <div className="adm-main">
+      <div className="main">
 
-        {/* TOPBAR */}
-        <div className="adm-topbar">
-          <div className="adm-topbar-title">
+        {/* Topbar */}
+        <div className="topbar">
+          <div className="topbar-title">
             {viewLabels[view] || "Dashboard"}
-            <span className="adm-crumb">{viewLabels[view]}</span>
+            <span className="crumb">{viewLabels[view]}</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div className="adm-srch">
+            <div className="srch">
               <Search size={12} style={{ color: "var(--ink5)", flexShrink: 0 }} strokeWidth={2} />
               <input placeholder="Nom, email, dossier…" value={search} onChange={e => setSearch(e.target.value)} />
               {search && <span style={{ cursor: "pointer", color: "var(--ink4)", flexShrink: 0 }} onClick={() => setSearch("")}><X size={11} /></span>}
             </div>
-            <div className="adm-role-filter">
+            <div className="role-filter">
               <Filter size={11} style={{ color: "var(--ink4)" }} />
               <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)}>
                 <option value="">Tous les rôles</option>
@@ -1286,10 +1310,10 @@ export default function AdminDashboard() {
               <ChevronDown size={10} style={{ color: "var(--ink4)" }} />
             </div>
             {(search || roleFilter) && (
-              <span className="adm-count-pill">{filtered.length} résultat{filtered.length !== 1 ? "s" : ""}</span>
+              <span className="count-pill">{filtered.length} résultat{filtered.length !== 1 ? "s" : ""}</span>
             )}
           </div>
-          <span className="adm-top-date">{today}</span>
+          <span className="top-date">{today}</span>
 
           {/* Bell */}
           <div className="bell-wrap">
@@ -1316,7 +1340,9 @@ export default function AdminDashboard() {
                         <div className="notif-name">{u.first_name} {u.last_name}</div>
                         <div className="notif-sub">{u.email}</div>
                       </div>
-                      <button className="approve-btn" onClick={() => { approveUser(u.id); setNotifOpen(false); }}>✔ Approuver</button>
+                      <button className="approve-btn" onClick={() => { approveUser(u.id); setNotifOpen(false); }}>
+                        ✔ Approuver
+                      </button>
                     </div>
                   ))}
                 </motion.div>
@@ -1329,55 +1355,56 @@ export default function AdminDashboard() {
           </button>
         </div>
 
-        {/* CONTENT */}
-        <div className="adm-content">
+        {/* Content */}
+        <div className="content">
 
-          {/* DASHBOARD */}
+          {/* ══ DASHBOARD ══ */}
           {view === "dashboard" && (
-            <motion.div style={{ display: "flex", flexDirection: "column", gap: 20 }}
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35 }}>
+            <motion.div style={{ display: "flex", flexDirection: "column", gap: 22 }}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35 }}>
 
-              <div className="adm-banner">
-                <div className="adm-banner-pattern" />
-                <div className="adm-banner-dots" />
-                <div className="adm-banner-left">
-                  <div className="adm-banner-eyebrow"><Sparkles size={10} /> Espace Administrateur</div>
-                  <div className="adm-banner-title">Bienvenue, {adminName.split(" ")[0]} </div>
-                  <div className="adm-banner-sub">Vue d'ensemble de la plateforme Alumni UIDT</div>
+              <div className="banner">
+                <div className="banner-mesh" />
+                <div className="banner-grid" />
+                <div className="banner-dots" />
+                <div className="banner-left">
+                  <div className="banner-eye"><Sparkles size={10} /> Espace Administrateur</div>
+                  <div className="banner-title">Bonjour, {adminName.split(" ")[0]}</div>
+                  <div className="banner-sub">Vue d'ensemble de la plateforme Alumni UIDT</div>
                 </div>
-                <div className="adm-banner-right">
-                  <div className="adm-bstat">
-                    <div className="adm-bsv">{stats.total_users ?? 0}</div>
-                    <div className="adm-bsl">Utilisateurs</div>
+                <div className="banner-right">
+                  <div className="bstat">
+                    <div className="bsv">{stats.total_users ?? 0}</div>
+                    <div className="bsl">Utilisateurs</div>
                   </div>
-                  <div className="adm-bstat">
-                    <div className="adm-bsv">{pendingUsers.length}</div>
-                    <div className="adm-bsl">En attente</div>
+                  <div className="bstat">
+                    <div className="bsv">{pendingUsers.length}</div>
+                    <div className="bsl">En attente</div>
                   </div>
                 </div>
               </div>
 
-              <div className="adm-stats">
-                <StatCard title="Utilisateurs"   value={stats.total_users}        color={C.primary} icon={Users}     sub="comptes enregistrés" trend={8} />
-                <StatCard title="Alumni"          value={stats.total_alumni}       color={C.green}   icon={UserCheck} sub="diplômés actifs"      trend={5} />
-                <StatCard title="Responsables"    value={stats.total_responsables} color={C.gold}    icon={Shield}    sub="encadrants"           trend={2} />
-                <StatCard title="Administrateurs" value={stats.total_admins}       color={C.rose}    icon={Settings}  sub="accès complet"        trend={1} />
+              <div className="stats">
+                <StatCard title="Utilisateurs"   value={stats.total_users}        color={C.p}     icon={Users}     sub="comptes enregistrés" trend={8} />
+                <StatCard title="Alumni"          value={stats.total_alumni}       color={C.em}    icon={UserCheck} sub="diplômés actifs"      trend={5} />
+                <StatCard title="Responsables"    value={stats.total_responsables} color={C.amber} icon={Shield}    sub="encadrants"           trend={2} />
+                <StatCard title="Administrateurs" value={stats.total_admins}       color={C.rose}  icon={Settings}  sub="accès complet"        trend={1} />
               </div>
 
-              <div className="adm-charts">
-                <ChartCard title="Inscriptions par période" sub="8 dernières périodes" badge="Histogramme" badgeColor={C.primary}>
+              <div className="charts">
+                <ChartCard title="Inscriptions par période" sub="8 dernières périodes" badge="Histogramme" badgeColor={C.p}>
                   <BarChart data={barData} barSize={18}>
                     <defs>
-                      <linearGradient id="adm-barGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={C.primary} />
-                        <stop offset="100%" stopColor={C.teal} stopOpacity={0.6} />
+                      <linearGradient id="adm2-bg" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={C.p} />
+                        <stop offset="100%" stopColor={C.sky} stopOpacity={0.6} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(15,23,42,0.06)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(15,23,42,.06)" />
                     <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#94a3b8", fontFamily: "DM Mono" }} axisLine={false} tickLine={false} />
                     <YAxis tick={{ fontSize: 10, fill: "#94a3b8", fontFamily: "DM Mono" }} axisLine={false} tickLine={false} />
                     <Tooltip content={<LightTooltip />} />
-                    <Bar dataKey="inscrits" fill="url(#adm-barGrad)" radius={[6, 6, 0, 0]} isAnimationActive={false} />
+                    <Bar dataKey="inscrits" fill="url(#adm2-bg)" radius={[6, 6, 0, 0]} isAnimationActive={false} />
                   </BarChart>
                 </ChartCard>
                 <ChartCard title="Distribution des rôles" sub="Proportion par type">
@@ -1387,7 +1414,7 @@ export default function AdminDashboard() {
                       {pieData.map((_, i) => <Cell key={i} fill={PIE_COLORS[i]} />)}
                     </Pie>
                     <Tooltip content={<LightTooltip />} />
-                    <Legend wrapperStyle={{ fontSize: 11, color: "#64748b", fontFamily: "Plus Jakarta Sans" }} iconType="circle" iconSize={8} />
+                    <Legend wrapperStyle={{ fontSize: 11, color: "#64748b" }} iconType="circle" iconSize={8} />
                   </PieChart>
                 </ChartCard>
               </div>
@@ -1401,7 +1428,7 @@ export default function AdminDashboard() {
             </motion.div>
           )}
 
-          {/* USERS */}
+          {/* ══ USERS ══ */}
           {view === "users" && (
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .3 }}>
               <UserCardsPanel
@@ -1413,7 +1440,7 @@ export default function AdminDashboard() {
             </motion.div>
           )}
 
-          {/* STRUCT */}
+          {/* ══ STRUCT ══ */}
           {(view === "ufr" || view === "departement" || view === "filiere") && (
             <StructView type={view} ufrs={ufrs}
               ufrForm={ufrForm}         setUfrForm={setUfrForm}
@@ -1427,7 +1454,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* MODALS */}
+      {/* ══ MODALS ══ */}
       <AnimatePresence>
         {open && (
           <UserModal title="Créer un utilisateur"
@@ -1449,7 +1476,8 @@ export default function AdminDashboard() {
             onClose={() => { setEditOpen(false); setSelectedUser(null); setEditDepts([]); setEditFilieres([]); }} />
         )}
         {profileOpen && profile && (
-          <ProfileModal profile={profile} setProfile={setProfile} onSave={updateProfile} onClose={() => setProfileOpen(false)} />
+          <ProfileModal profile={profile} setProfile={setProfile}
+            onSave={updateProfile} onClose={() => setProfileOpen(false)} />
         )}
       </AnimatePresence>
 
