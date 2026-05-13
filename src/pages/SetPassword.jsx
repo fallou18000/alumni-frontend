@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api";
+import logo from "../assets/logo.jpeg";
 
 export default function SetPassword() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  const token = searchParams.get("token");
-  const email = searchParams.get("email");
-
   const [password, setPassword] = useState("");
   const [password_confirmation, setPasswordConfirmation] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+
+  const token = params.get("token");
+  const email = params.get("email");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setError("");
+    setMessage("");
 
     if (!token || !email) {
-      setError("Lien invalide");
+      setError("Lien invalide ou expiré");
       return;
     }
 
@@ -32,50 +35,154 @@ export default function SetPassword() {
     setLoading(true);
 
     try {
-      await api.post("/set-password", {
+      await api.post("/reset-password", {
         token,
         email,
         password,
         password_confirmation,
       });
 
-      navigate("/login");
+      setMessage("Mot de passe défini avec succès !");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
-      setError(err.response?.data?.message || "Erreur");
+      setError(err.response?.data?.message || "Erreur serveur");
     }
 
     setLoading(false);
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "auto", marginTop: 100 }}>
-      <h2>Définir mot de passe</h2>
+    <>
+      <style>{`
+        body {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          background: #f4f6f9;
+        }
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        .page {
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+        }
 
-        <br /><br />
+        .card {
+          width: 100%;
+          max-width: 480px;
+          background: #ffffff;
+          padding: 40px 35px;
+          border-radius: 16px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+          text-align: center;
+          border-top: 5px solid #1e3a8a;
+        }
 
-        <input
-          type="password"
-          placeholder="Confirmer"
-          value={password_confirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-        />
+        .logo {
+          width: 80px;
+          margin-bottom: 15px;
+        }
 
-        <br /><br />
+        .title {
+          font-size: 24px;
+          font-weight: 700;
+          color: #0f172a;
+        }
 
-        <button disabled={loading}>
-          {loading ? "Chargement..." : "Valider"}
-        </button>
-      </form>
+        .subtitle {
+          font-size: 14px;
+          color: #475569;
+          margin-bottom: 25px;
+        }
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </div>
+        .form {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .input {
+          padding: 15px;
+          border-radius: 10px;
+          border: 1px solid #cbd5e1;
+          font-size: 16px;
+          background: #f8fafc;
+        }
+
+        .input:focus {
+          border-color: #1e3a8a;
+          outline: none;
+        }
+
+        .button {
+          padding: 15px;
+          border-radius: 10px;
+          border: none;
+          background: #1e3a8a;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .error {
+          color: red;
+          margin-top: 10px;
+        }
+
+        .success {
+          color: green;
+          margin-top: 10px;
+        }
+      `}</style>
+
+      <div className="page">
+        <div className="card">
+
+          <img src={logo} alt="logo" className="logo" />
+
+          <h2 className="title">Définir le mot de passe</h2>
+          <p className="subtitle">Créez votre mot de passe sécurisé</p>
+
+          <form className="form" onSubmit={handleSubmit}>
+
+            <input
+              type="password"
+              placeholder="Nouveau mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="input"
+            />
+
+            <input
+              type="password"
+              placeholder="Confirmer mot de passe"
+              value={password_confirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              required
+              className="input"
+            />
+
+            <button type="submit" disabled={loading} className="button">
+              {loading ? "En cours..." : "Valider"}
+            </button>
+
+          </form>
+
+          {error && <p className="error">{error}</p>}
+          {message && <p className="success">{message}</p>}
+
+        </div>
+      </div>
+    </>
   );
 }
