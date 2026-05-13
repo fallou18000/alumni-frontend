@@ -69,7 +69,7 @@ const CSS = `
   background: var(--sidebar);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh;
+  position: sticky; top: 0; height: auto;
   overflow: hidden;
   box-shadow: 2px 0 12px rgba(15,23,42,0.04);
 }
