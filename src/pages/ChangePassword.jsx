@@ -36,7 +36,7 @@ export default function SetPassword() {
     }
 
     try {
-      await api.post("/reset-password", {
+      await api.post("/set-password", {
         token,
         email,
         password,
