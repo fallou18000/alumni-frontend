@@ -1171,7 +1171,7 @@ setUsers(u.data);
             active={view === "dashboard"} onClick={() => setView("dashboard")} />
           <NavItem icon={Users} label="Utilisateurs"
             active={view === "users"} onClick={() => setView("users")}
-            badge={users.length} />
+            badge={(users ?? []).length} />
           <NavItem icon={Bell} label="Notifications"
             badge={pendingUsers.length || null}
             active={false}
