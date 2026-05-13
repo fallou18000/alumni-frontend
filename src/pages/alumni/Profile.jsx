@@ -85,7 +85,10 @@ export default function Profile() {
         : await api.get("/profile", { headers });
       setData(res.data);
       setForm({
-        filiere_id:      res.data.profile?.filiere_id      || "",
+       filiere_id:
+  res.data.profile?.filiere_id ||
+  res.data.filiere?.id ||
+  "",
         graduation_year: res.data.profile?.graduation_year || "",
         degree_level:    res.data.profile?.degree_level    || "",
         status:          res.data.profile?.status          || "",
@@ -112,31 +115,65 @@ export default function Profile() {
     loadEntreprises();
   }, [id]);
 
-  const handleSave = async () => {
-    setSaving(true);
-    const fd = new FormData();
-  Object.keys(form).forEach(k => {
-  if (
-    form[k] !== null &&
-    form[k] !== undefined &&
-    form[k] !== ""
-  ) {
-    fd.append(k, form[k]);
-  }
-});
+const handleSave = async () => {
+  try {
 
-// IMPORTANT
-fd.append("filiere_id", form.filiere_id);
-    if (photo) fd.append("photo", photo);
-    if (id) {
-      await api.post(`/admin/profile/${id}?_method=PUT`, fd, { headers });
-    } else {
-      await api.post("/profile", fd, { headers });
+    setSaving(true);
+
+    const fd = new FormData();
+
+    Object.keys(form).forEach(k => {
+      if (
+        form[k] !== null &&
+        form[k] !== undefined &&
+        form[k] !== ""
+      ) {
+        fd.append(k, form[k]);
+      }
+    });
+
+    // ✅ fallback automatique
+    const filiereId =
+      form.filiere_id || data?.filiere?.id;
+
+    fd.append("filiere_id", filiereId);
+
+    console.log("FILIERE =", filiereId);
+
+    console.log([...fd.entries()]);
+
+    if (photo) {
+      fd.append("photo", photo);
     }
+
+    if (id) {
+      await api.post(
+        `/admin/profile/${id}?_method=PUT`,
+        fd,
+        { headers }
+      );
+    } else {
+      await api.post(
+        "/profile",
+        fd,
+        { headers }
+      );
+    }
+
     setEditOpen(false);
-    setSaving(false);
+
     await fetchData();
-  };
+
+  } catch (err) {
+
+    console.log(err.response?.data);
+
+  } finally {
+
+    setSaving(false);
+
+  }
+};
 
   const handleCreateEntreprise = async () => {
     setCreating(true);
