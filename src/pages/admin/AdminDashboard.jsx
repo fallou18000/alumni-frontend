@@ -12,14 +12,14 @@ import {
   Search, Bell, Plus, Trash2, Edit, X,
   Download, ChevronRight, GraduationCap,
   Building2, BookOpen, Settings, LogOut,
-  Filter, ChevronDown, Sparkles, Mail, Hash,
+  Filter, ChevronDown, Sparkles, Mail, Hash, Menu,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 
 /* ════════════════════════════════════════
-   CSS — même design system que ResponsableDashboard
+   CSS — design system + RESPONSIVE COMPLET
 ════════════════════════════════════════ */
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Cabinet+Grotesk:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap');
@@ -65,6 +65,7 @@ const CSS = `
   display:flex;min-height:100vh;
   font-family:var(--ff);font-size:13.5px;
   background:var(--bg);color:var(--ink2);
+  position:relative;
 }
 
 /* ═══ SIDEBAR ═══ */
@@ -76,6 +77,8 @@ const CSS = `
   position:sticky;top:0;height:100vh;
   overflow:hidden;
   box-shadow:2px 0 16px rgba(15,23,42,.04);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  z-index:200;
 }
 .adm2 .sb-accent{
   height:3px;
@@ -183,8 +186,15 @@ const CSS = `
 .adm2 .sb-sep{height:1px;background:var(--border);margin:8px 12px;}
 .adm2 .sb-ft{padding:8px 10px 20px;border-top:1px solid var(--border);}
 
+/* ─ Sidebar overlay (mobile) ─ */
+.adm2 .sb-overlay{
+  display:none;
+  position:fixed;inset:0;background:rgba(15,23,42,.45);
+  backdrop-filter:blur(4px);z-index:190;
+}
+
 /* ═══ MAIN ═══ */
-.adm2 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
+.adm2 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;min-width:0;}
 
 /* ─ Topbar ─ */
 .adm2 .topbar{
@@ -250,6 +260,16 @@ const CSS = `
   border:2px solid #fff;
 }
 
+/* ─ Menu burger (mobile) ─ */
+.adm2 .menu-btn{
+  display:none;
+  width:38px;height:38px;border-radius:var(--r2);
+  background:var(--bg);border:1.5px solid var(--border);
+  align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink3);transition:all .18s;flex-shrink:0;
+}
+.adm2 .menu-btn:hover{border-color:var(--pb);color:var(--p);}
+
 /* Notif panel */
 .adm2 .notif-panel{
   position:absolute;right:0;top:48px;width:320px;
@@ -306,6 +326,7 @@ const CSS = `
   display:flex;align-items:center;justify-content:space-between;
   position:relative;overflow:hidden;
   box-shadow:0 12px 40px rgba(67,56,202,.3);
+  flex-wrap:wrap;gap:20px;
 }
 .adm2 .banner-mesh{
   position:absolute;inset:0;pointer-events:none;
@@ -339,6 +360,7 @@ const CSS = `
   position:relative;z-index:1;display:flex;
   background:rgba(255,255,255,.09);border-radius:var(--r2);
   border:1px solid rgba(255,255,255,.14);overflow:hidden;backdrop-filter:blur(10px);
+  flex-shrink:0;
 }
 .adm2 .bstat{padding:18px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
 .adm2 .bstat:last-child{border-right:none;}
@@ -495,6 +517,7 @@ const CSS = `
   background:var(--white);border:1px solid var(--border);
   border-radius:var(--r);padding:30px 32px;max-width:520px;
   box-shadow:var(--sh0);position:relative;overflow:hidden;
+  width:100%;
 }
 .adm2 .struct-wrap::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
@@ -520,10 +543,11 @@ const CSS = `
   position:fixed;inset:0;background:rgba(15,23,42,.45);
   backdrop-filter:blur(10px);z-index:300;
   display:flex;align-items:center;justify-content:center;
+  padding:16px;
 }
 .adm2 .modal{
   background:#fff;border:1px solid var(--border2);
-  border-radius:22px;width:500px;max-height:90vh;
+  border-radius:22px;width:100%;max-width:500px;max-height:90vh;
   display:flex;flex-direction:column;box-shadow:var(--sh3);overflow:hidden;
 }
 .adm2 .modal-hd{
@@ -543,6 +567,7 @@ const CSS = `
 .adm2 .modal-ft{
   padding:14px 24px;border-top:1px solid var(--border);
   display:flex;gap:8px;justify-content:flex-end;background:var(--bg);
+  flex-wrap:wrap;
 }
 .adm2 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .adm2 .fld{display:flex;flex-direction:column;gap:5px;}
@@ -572,13 +597,116 @@ const CSS = `
 .adm2 .td.error{background:var(--rose);}
 .adm2 .td.info{background:var(--amber);}
 
+/* ════════════════════════════════════════
+   RESPONSIVE — Large Desktop (>1400px)
+════════════════════════════════════════ */
+@media(min-width:1400px){
+  .adm2 .stats{grid-template-columns:repeat(4,1fr);}
+  .adm2 .charts{grid-template-columns:1.5fr 1fr;}
+  .adm2 .cards-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — Tablet Landscape (1100px)
+════════════════════════════════════════ */
 @media(max-width:1100px){
   .adm2 .stats{grid-template-columns:repeat(2,1fr);}
   .adm2 .charts{grid-template-columns:1fr;}
+  .adm2 .sb{width:230px;}
+  .adm2 .content{padding:20px 22px;}
+  .adm2 .topbar{padding:0 20px;gap:8px;}
+  .adm2 .srch{width:180px;}
+  .adm2 .srch:focus-within{width:210px;}
+  .adm2 .top-date{display:none;}
+  .adm2 .role-filter select{min-width:70px;}
+  .adm2 .banner-title{font-size:24px;}
+  .adm2 .bsv{font-size:26px;}
 }
-@media(max-width:768px){
-  .adm2 .sb{display:none;}
-  .adm2 .cards-grid{grid-template-columns:1fr;}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — Tablet Portrait (900px)
+════════════════════════════════════════ */
+@media(max-width:900px){
+  .adm2 .sb{
+    position:fixed;left:0;top:0;height:100vh;
+    transform:translateX(-100%);
+    z-index:200;
+  }
+  .adm2 .sb.open{transform:translateX(0);}
+  .adm2 .sb-overlay{display:block;}
+  .adm2 .menu-btn{display:flex;}
+  .adm2 .main{width:100%;}
+  .adm2 .content{padding:18px 18px;}
+  .adm2 .topbar{padding:0 16px;gap:8px;}
+  .adm2 .topbar-title{font-size:14px;}
+  .adm2 .crumb{display:none;}
+  .adm2 .srch{width:160px;}
+  .adm2 .srch:focus-within{width:180px;}
+  .adm2 .stats{grid-template-columns:repeat(2,1fr);}
+  .adm2 .charts{grid-template-columns:1fr;}
+  .adm2 .banner{padding:24px 22px;}
+  .adm2 .banner-title{font-size:22px;}
+  .adm2 .banner-right{width:100%;}
+  .adm2 .bstat{flex:1;}
+  .adm2 .notif-panel{width:290px;right:-10px;}
+  .adm2 .struct-wrap{padding:22px 20px;}
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — Mobile Large (640px)
+════════════════════════════════════════ */
+@media(max-width:640px){
+  .adm2 .topbar{height:58px;padding:0 14px;gap:6px;}
+  .adm2 .topbar-title{font-size:13px;}
+  .adm2 .srch{width:130px;}
+  .adm2 .srch:focus-within{width:150px;}
+  .adm2 .role-filter{display:none;}
+  .adm2 .count-pill{display:none;}
+  .adm2 .content{padding:14px 14px;gap:16px;}
+  .adm2 .stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .adm2 .stat{padding:16px 14px 12px;}
+  .adm2 .stat-val{font-size:26px;}
+  .adm2 .stat-ico{width:36px;height:36px;border-radius:10px;}
+  .adm2 .charts{grid-template-columns:1fr;gap:12px;}
+  .adm2 .cc{padding:16px 16px;}
+  .adm2 .banner{padding:20px 18px;gap:16px;}
+  .adm2 .banner-title{font-size:20px;}
+  .adm2 .banner-sub{font-size:12px;}
+  .adm2 .banner-right{width:100%;}
+  .adm2 .bsv{font-size:24px;}
+  .adm2 .bstat{padding:14px 16px;}
+  .adm2 .cards-grid{grid-template-columns:1fr;gap:10px;padding:14px 12px;}
+  .adm2 .cards-hd{padding:14px 16px;}
+  .adm2 .cards-title{font-size:13px;}
+  .adm2 .row2{grid-template-columns:1fr;gap:10px;}
+  .adm2 .modal{border-radius:18px;}
+  .adm2 .modal-hd{padding:18px 18px 14px;}
+  .adm2 .modal-body{padding:16px 18px;}
+  .adm2 .modal-ft{padding:12px 18px;}
+  .adm2 .struct-wrap{padding:18px 16px;border-radius:var(--r2);}
+  .adm2 .struct-title{font-size:18px;}
+  .adm2 .toasts{bottom:14px;right:10px;left:10px;align-items:stretch;}
+  .adm2 .toast{min-width:unset;}
+  .adm2 .notif-panel{width:calc(100vw - 28px);right:-14px;}
+  .adm2 .btn{padding:7px 13px;font-size:11.5px;}
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE — Mobile Small (400px)
+════════════════════════════════════════ */
+@media(max-width:400px){
+  .adm2 .stats{grid-template-columns:1fr 1fr;}
+  .adm2 .topbar{padding:0 10px;gap:5px;}
+  .adm2 .srch{width:110px;}
+  .adm2 .srch:focus-within{width:120px;}
+  .adm2 .content{padding:12px 10px;gap:14px;}
+  .adm2 .banner{padding:16px 14px;}
+  .adm2 .banner-title{font-size:18px;}
+  .adm2 .bsv{font-size:20px;}
+  .adm2 .bstat{padding:10px 12px;}
+  .adm2 .stat-val{font-size:22px;}
+  .adm2 .cards-grid{padding:10px 10px;}
+  .adm2 .cards-hd{padding:12px 14px;}
 }
 `;
 
@@ -745,12 +873,10 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
                   exit={{ opacity: 0, scale: .96 }}
                   transition={{ duration: .2, delay: i * 0.025 }}>
 
-                  {/* Stripe top couleur par rôle */}
                   <div className="uc-stripe"
                     style={{ background: `linear-gradient(90deg,${colLine},${colLine}55)` }} />
 
                   <div className="uc-body">
-                    {/* Head */}
                     <div className="uc-head">
                       <div className="uc-av-wrap">
                         <div className="uc-av" style={{ background: grad }}>{initials(u)}</div>
@@ -768,7 +894,6 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
                       </div>
                     </div>
 
-                    {/* Meta row email */}
                     <div className="uc-rows">
                       <div className="uc-row">
                         <div className="uc-row-ico"><Mail size={11} /></div>
@@ -776,7 +901,6 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
                       </div>
                     </div>
 
-                    {/* Tags */}
                     <div className="uc-tags">
                       <span className={`uc-tag ${roleTag.cls}`}>{roleTag.label}</span>
                       <span className={`uc-tag ${approved ? "tag-ok" : "tag-pend"}`}>
@@ -785,7 +909,6 @@ function UserCardsPanel({ users, onEdit, onDelete, onView, onApprove, onExport, 
                     </div>
                   </div>
 
-                  {/* Footer actions */}
                   <div className="uc-footer">
                     <button className="uc-btn" title="Modifier" onClick={() => onEdit(u)}>
                       <Edit size={12} />
@@ -1032,6 +1155,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const { toasts, push: toast, remove: removeToast } = useToasts();
 
+  const [sidebarOpen,  setSidebarOpen]  = useState(false);
   const [notifOpen,    setNotifOpen]    = useState(false);
   const [stats,        setStats]        = useState({});
   const [growth,       setGrowth]       = useState([]);
@@ -1241,11 +1365,19 @@ export default function AdminDashboard() {
     ufr: "UFR", departement: "Département", filiere: "Filière",
   };
 
+  /* Helper : nav click ferme sidebar sur mobile */
+  const navTo = (v) => { setView(v); setSidebarOpen(false); };
+
   return (
     <div className="adm2">
 
+      {/* ══ SIDEBAR OVERLAY (mobile) ══ */}
+      {sidebarOpen && (
+        <div className="sb-overlay" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* ══ SIDEBAR ══ */}
-      <aside className="sb">
+      <aside className={`sb${sidebarOpen ? " open" : ""}`}>
         <div className="sb-accent" />
 
         {/* Profil animé */}
@@ -1270,14 +1402,14 @@ export default function AdminDashboard() {
 
         <nav className="sb-nav">
           <div className="sb-grp">Principal</div>
-          <NavItem icon={LayoutDashboard} label="Tableau de bord" active={view === "dashboard"} onClick={() => setView("dashboard")} />
-          <NavItem icon={Users}   label="Utilisateurs" active={view === "users"}   onClick={() => setView("users")} badge={users.length || null} />
-          <NavItem icon={Bell}    label="Notifications" badge={pendingUsers.length || null} active={false} onClick={() => setNotifOpen(o => !o)} />
+          <NavItem icon={LayoutDashboard} label="Tableau de bord" active={view === "dashboard"} onClick={() => navTo("dashboard")} />
+          <NavItem icon={Users}   label="Utilisateurs" active={view === "users"}   onClick={() => navTo("users")} badge={users.length || null} />
+          <NavItem icon={Bell}    label="Notifications" badge={pendingUsers.length || null} active={false} onClick={() => { setNotifOpen(o => !o); setSidebarOpen(false); }} />
           <div className="sb-sep" />
           <div className="sb-grp">Structure</div>
-          <NavItem icon={GraduationCap} label="UFR"         active={view === "ufr"}         onClick={() => setView("ufr")} />
-          <NavItem icon={Building2}     label="Département" active={view === "departement"} onClick={() => setView("departement")} />
-          <NavItem icon={BookOpen}      label="Filière"     active={view === "filiere"}     onClick={() => setView("filiere")} />
+          <NavItem icon={GraduationCap} label="UFR"         active={view === "ufr"}         onClick={() => navTo("ufr")} />
+          <NavItem icon={Building2}     label="Département" active={view === "departement"} onClick={() => navTo("departement")} />
+          <NavItem icon={BookOpen}      label="Filière"     active={view === "filiere"}     onClick={() => navTo("filiere")} />
         </nav>
         <div className="sb-ft">
           <NavItem icon={LogOut} label="Déconnexion" active={false} onClick={() => navigate("/login")} />
@@ -1289,6 +1421,11 @@ export default function AdminDashboard() {
 
         {/* Topbar */}
         <div className="topbar">
+          {/* Burger (visible ≤900px) */}
+          <button className="menu-btn" onClick={() => setSidebarOpen(o => !o)}>
+            <Menu size={16} strokeWidth={2} />
+          </button>
+
           <div className="topbar-title">
             {viewLabels[view] || "Dashboard"}
             <span className="crumb">{viewLabels[view]}</span>
