@@ -14,7 +14,7 @@ import {
   LayoutDashboard, LogOut, Bell, CheckCircle,
   AlertCircle, FileText, Sparkles, Building2,
   Filter, MapPin, Star, Award, ChevronRight,
-  Zap, BarChart2,
+  Zap, BarChart2, Menu,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -60,27 +60,40 @@ const CSS = `
   --ff:'Cabinet Grotesk',sans-serif;
   --fs:'Instrument Serif',serif;
   --mono:'DM Mono',monospace;
+  --sb-w:260px;
 }
 
 .rs3{
   display:flex;min-height:100vh;
   font-family:var(--ff);font-size:13.5px;
   background:var(--bg);color:var(--ink2);
+  position:relative;
 }
+
+/* ═══ OVERLAY mobile sidebar ═══ */
+.rs3 .sb-overlay{
+  display:none;
+  position:fixed;inset:0;background:rgba(15,23,42,.45);
+  backdrop-filter:blur(4px);z-index:90;
+}
+.rs3 .sb-overlay.open{display:block;}
 
 /* ═══ SIDEBAR ═══ */
 .rs3 .sb{
-  width:260px;flex-shrink:0;
+  width:var(--sb-w);flex-shrink:0;
   background:var(--sb);
   border-right:1px solid var(--border);
   display:flex;flex-direction:column;
   position:sticky;top:0;height:100vh;
   overflow:hidden;
   box-shadow:2px 0 16px rgba(15,23,42,.04);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  z-index:100;
 }
 .rs3 .sb-accent{
   height:3px;
   background:linear-gradient(90deg,var(--indigo),var(--violet),var(--sky));
+  flex-shrink:0;
 }
 
 /* ─ Profile animé ─ */
@@ -91,12 +104,9 @@ const CSS = `
   position:relative;
 }
 .rs3 .av-stage{
-  position:relative;
-  width:90px;height:90px;
+  position:relative;width:90px;height:90px;
   display:flex;align-items:center;justify-content:center;
 }
-
-/* Cercles tournants */
 .rs3 .av-ring1{
   position:absolute;inset:0;border-radius:50%;
   border:1.5px dashed rgba(91,91,214,.25);
@@ -112,17 +122,13 @@ const CSS = `
   border:1px dashed rgba(14,165,233,.12);
   animation:rs3-spin1 28s linear infinite;
 }
-
-/* Petits satellites sur les rings */
 .rs3 .av-sat{
-  position:absolute;
-  width:7px;height:7px;border-radius:50%;
+  position:absolute;width:7px;height:7px;border-radius:50%;
   top:50%;left:0;transform:translateY(-50%);
 }
 .rs3 .av-sat1{background:var(--indigo);box-shadow:0 0 8px rgba(91,91,214,.6);}
 .rs3 .av-sat2{background:var(--violet);box-shadow:0 0 8px rgba(139,92,246,.6);}
 .rs3 .av-sat3{background:var(--sky);box-shadow:0 0 8px rgba(14,165,233,.6);width:5px;height:5px;}
-
 @keyframes rs3-spin1{to{transform:rotate(360deg);}}
 
 .rs3 .av-core{
@@ -148,8 +154,7 @@ const CSS = `
 
 .rs3 .sb-name{
   font-family:var(--fs);font-size:16px;font-style:italic;
-  font-weight:400;color:var(--ink1);text-align:center;
-  line-height:1.2;
+  font-weight:400;color:var(--ink1);text-align:center;line-height:1.2;
 }
 .rs3 .sb-role{font-size:10.5px;color:var(--ink4);text-align:center;}
 .rs3 .sb-chip{
@@ -188,6 +193,14 @@ const CSS = `
 }
 .rs3 .sb-sep{height:1px;background:var(--border);margin:8px 12px;}
 .rs3 .sb-ft{padding:8px 10px 20px;border-top:1px solid var(--border);}
+.rs3 .sb-close-btn{
+  display:none;
+  position:absolute;top:14px;right:14px;
+  width:30px;height:30px;border-radius:8px;
+  background:var(--bg);border:1.5px solid var(--border);
+  align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink4);
+}
 
 /* ═══ MAIN ═══ */
 .rs3 .main{flex:1;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;}
@@ -229,9 +242,16 @@ const CSS = `
   width:38px;height:38px;border-radius:var(--r2);
   background:var(--bg);border:1.5px solid var(--border);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:var(--ink4);transition:all .18s;
+  cursor:pointer;color:var(--ink4);transition:all .18s;flex-shrink:0;
 }
 .rs3 .bell-btn:hover{border-color:rgba(91,91,214,.3);color:var(--indigo);}
+.rs3 .menu-btn{
+  display:none;
+  width:38px;height:38px;border-radius:var(--r2);
+  background:var(--bg);border:1.5px solid var(--border);
+  align-items:center;justify-content:center;
+  cursor:pointer;color:var(--ink3);flex-shrink:0;
+}
 
 /* ─ Buttons ─ */
 .rs3 .btn{
@@ -262,6 +282,7 @@ const CSS = `
   display:flex;align-items:center;justify-content:space-between;
   position:relative;overflow:hidden;
   box-shadow:0 12px 40px rgba(67,56,202,.3);
+  gap:20px;flex-wrap:wrap;
 }
 .rs3 .banner-mesh{
   position:absolute;inset:0;pointer-events:none;
@@ -281,7 +302,7 @@ const CSS = `
   background-image:radial-gradient(circle,rgba(255,255,255,.13) 1.5px,transparent 1.5px);
   background-size:16px 16px;
 }
-.rs3 .banner-left{position:relative;z-index:1;}
+.rs3 .banner-left{position:relative;z-index:1;flex:1;min-width:0;}
 .rs3 .banner-eye{
   font-size:9.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
   color:rgba(199,210,254,.7);margin-bottom:8px;display:flex;align-items:center;gap:6px;
@@ -295,7 +316,7 @@ const CSS = `
   position:relative;z-index:1;display:flex;
   background:rgba(255,255,255,.09);border-radius:var(--r2);
   border:1px solid rgba(255,255,255,.14);overflow:hidden;
-  backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);flex-shrink:0;
 }
 .rs3 .bstat{padding:18px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
 .rs3 .bstat:last-child{border-right:none;}
@@ -353,45 +374,26 @@ select.fi{
 }
 select.fi option{background:#fff;color:#1e293b;}
 
-/* ═══ CARDS ALUMNI — le pièce de résistance ═══ */
+/* ═══ CARDS ALUMNI ═══ */
 .rs3 .cards-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
   gap:16px;
 }
-
 .rs3 .alumni-card{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  overflow:hidden;
-  position:relative;
-  box-shadow:var(--sh0);
-  transition:all .28s cubic-bezier(.4,0,.2,1);
-  cursor:default;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;position:relative;
+  box-shadow:var(--sh0);transition:all .28s cubic-bezier(.4,0,.2,1);cursor:default;
 }
-.rs3 .alumni-card:hover{
-  transform:translateY(-6px);
-  box-shadow:var(--sh2);
-  border-color:rgba(91,91,214,.18);
-}
-
-/* Bande couleur haut */
-.rs3 .ac-stripe{
-  height:4px;
-  background:linear-gradient(90deg,var(--indigo),var(--violet),var(--sky));
-}
-
+.rs3 .alumni-card:hover{transform:translateY(-6px);box-shadow:var(--sh2);border-color:rgba(91,91,214,.18);}
+.rs3 .ac-stripe{height:4px;background:linear-gradient(90deg,var(--indigo),var(--violet),var(--sky));}
 .rs3 .ac-body{padding:20px 20px 16px;}
-
-/* Avatar carte */
 .rs3 .ac-head{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
 .rs3 .ac-av-wrap{position:relative;flex-shrink:0;}
 .rs3 .ac-av{
   width:52px;height:52px;border-radius:16px;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--fs);font-size:18px;font-style:italic;
-  font-weight:400;color:#fff;
+  font-family:var(--fs);font-size:18px;font-style:italic;font-weight:400;color:#fff;
   box-shadow:0 4px 14px rgba(91,91,214,.25);
 }
 .rs3 .ac-av-badge{
@@ -414,28 +416,19 @@ select.fi option{background:#fff;color:#1e293b;}
   background:rgba(91,91,214,.08);border:1px solid rgba(91,91,214,.15);
   padding:2px 8px;border-radius:20px;
 }
-
-/* Infos lignes */
 .rs3 .ac-rows{display:flex;flex-direction:column;gap:7px;margin-bottom:16px;}
-.rs3 .ac-row{
-  display:flex;align-items:center;gap:8px;
-  font-size:12px;color:var(--ink3);
-}
+.rs3 .ac-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);}
 .rs3 .ac-row-ico{
   width:24px;height:24px;border-radius:7px;
-  background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
   flex-shrink:0;color:var(--ink4);
 }
 .rs3 .ac-row-val{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
 .rs3 .ac-row-val.accent{color:var(--indigo);font-weight:700;}
-
-/* Tags emploi / statut */
 .rs3 .ac-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 .rs3 .ac-tag{
   display:inline-flex;align-items:center;gap:5px;
-  font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;
-  letter-spacing:.2px;
+  font-size:10px;font-weight:700;padding:4px 9px;border-radius:20px;letter-spacing:.2px;
 }
 .rs3 .ac-tag::before{content:'';width:5px;height:5px;border-radius:50%;}
 .rs3 .tag-emerald{background:rgba(16,185,129,.09);color:var(--emerald);border:1px solid rgba(16,185,129,.2);}
@@ -446,12 +439,9 @@ select.fi option{background:#fff;color:#1e293b;}
 .rs3 .tag-amber::before{background:var(--amber);}
 .rs3 .tag-indigo{background:rgba(91,91,214,.09);color:var(--indigo);border:1px solid rgba(91,91,214,.18);}
 .rs3 .tag-indigo::before{background:var(--indigo);}
-
-/* Séparateur & footer card */
 .rs3 .ac-footer{
   display:flex;align-items:center;justify-content:space-between;
-  padding:12px 20px;
-  border-top:1px solid var(--border);
+  padding:12px 20px;border-top:1px solid var(--border);
   background:rgba(248,250,255,.7);
 }
 .rs3 .ac-email{font-size:11px;color:var(--ink4);font-family:var(--mono);letter-spacing:-.2px;}
@@ -464,12 +454,7 @@ select.fi option{background:#fff;color:#1e293b;}
 }
 .rs3 .ac-btn:hover{border-color:rgba(91,91,214,.3);color:var(--indigo);background:rgba(91,91,214,.07);}
 .rs3 .ac-btn.pdf:hover{border-color:rgba(245,158,11,.35);color:var(--amber);background:rgba(245,158,11,.07);}
-
-/* Cards header */
-.rs3 .cards-hd{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:4px;
-}
+.rs3 .cards-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
 .rs3 .cards-hd-title{
   font-size:15px;font-weight:800;color:var(--ink1);letter-spacing:-.2px;
   display:flex;align-items:center;gap:8px;
@@ -485,10 +470,7 @@ select.fi option{background:#fff;color:#1e293b;}
 }
 
 /* Entreprises top */
-.rs3 .ent-row{
-  display:flex;align-items:center;gap:12px;padding:10px 14px;
-  border-radius:var(--r3);transition:background .14s;
-}
+.rs3 .ent-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--r3);transition:background .14s;}
 .rs3 .ent-row:hover{background:var(--bg);}
 .rs3 .ent-rank{width:20px;text-align:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--ink4);}
 .rs3 .ent-logo{
@@ -508,10 +490,11 @@ select.fi option{background:#fff;color:#1e293b;}
   position:fixed;inset:0;background:rgba(15,23,42,.45);
   backdrop-filter:blur(10px);z-index:300;
   display:flex;align-items:center;justify-content:center;
+  padding:16px;
 }
 .rs3 .modal{
   background:#fff;border:1px solid var(--border2);
-  border-radius:22px;width:530px;max-height:90vh;
+  border-radius:22px;width:530px;max-width:100%;max-height:90vh;
   display:flex;flex-direction:column;box-shadow:var(--sh3);overflow:hidden;
 }
 .rs3 .m-hero{
@@ -566,21 +549,140 @@ select.fi option{background:#fff;color:#1e293b;}
   display:flex;align-items:center;gap:9px;
   background:#fff;border:1.5px solid var(--border2);
   border-radius:13px;padding:11px 15px;min-width:240px;
-  font-size:12.5px;font-weight:600;box-shadow:var(--sh2);pointer-events:all;
-  color:var(--ink2);
+  font-size:12.5px;font-weight:600;box-shadow:var(--sh2);pointer-events:all;color:var(--ink2);
 }
 .rs3 .td{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .rs3 .td.s{background:var(--emerald);}
 .rs3 .td.e{background:var(--rose);}
 .rs3 .td.i{background:var(--amber);}
 
+/* ════════════════════════════════════════════
+   RESPONSIVE — Tablette (≤1100px)
+════════════════════════════════════════════ */
 @media(max-width:1100px){
   .rs3 .stats{grid-template-columns:repeat(2,1fr);}
   .rs3 .charts{grid-template-columns:1fr;}
+  .rs3 .srch{width:160px;}
+  .rs3 .srch:focus-within{width:190px;}
+  .rs3 .top-date{display:none;}
+  .rs3 .banner-dots{display:none;}
+  .rs3 .banner-title{font-size:24px;}
+  .rs3 .bstat{padding:14px 18px;}
+  .rs3 .bsv{font-size:26px;}
 }
-@media(max-width:768px){
-  .rs3 .sb{display:none;}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — Tablette portrait (≤900px)
+════════════════════════════════════════════ */
+@media(max-width:900px){
+  :where(.rs3){--sb-w:240px;}
+
+  /* Sidebar en tiroir */
+  .rs3 .sb{
+    position:fixed;top:0;left:0;height:100vh;
+    transform:translateX(-100%);
+    z-index:100;
+  }
+  .rs3 .sb.open{transform:translateX(0);}
+  .rs3 .sb-close-btn{display:flex;}
+
+  /* Bouton hamburger */
+  .rs3 .menu-btn{display:flex;}
+
+  /* Content prend toute la largeur */
+  .rs3 .main{width:100%;}
+  .rs3 .content{padding:16px 18px;gap:16px;}
+  .rs3 .topbar{padding:0 16px;gap:8px;}
+
+  /* Charts en colonne */
+  .rs3 .charts{grid-template-columns:1fr;}
+  .rs3 .stats{grid-template-columns:repeat(2,1fr);gap:10px;}
+
+  /* Bar+top ent empilés */
+  .rs3 .bar-top-grid{grid-template-columns:1fr !important;}
+
+  /* Banner */
+  .rs3 .banner{padding:22px 24px;flex-direction:column;align-items:flex-start;}
+  .rs3 .banner-right{width:100%;}
+  .rs3 .bstat{flex:1;padding:12px 14px;}
+  .rs3 .banner-title{font-size:22px;}
+
+  .rs3 .cards-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
+  .rs3 .filter-bar{gap:8px;}
+  .rs3 .fi{font-size:12px;padding:7px 10px;}
+
+  /* Topbar search */
+  .rs3 .srch{width:140px;}
+  .rs3 .srch:focus-within{width:170px;}
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — Mobile (≤640px)
+════════════════════════════════════════════ */
+@media(max-width:640px){
+  :where(.rs3){--sb-w:280px;}
+
+  .rs3 .content{padding:12px 14px;gap:14px;}
+  .rs3 .topbar{padding:0 12px;height:56px;gap:6px;}
+  .rs3 .topbar-title{font-size:14px;}
+  .rs3 .crumb{display:none;}
+
+  /* Masquer recherche sur très petit écran */
+  .rs3 .srch{display:none;}
+
+  /* Stats en 2 colonnes serrées */
+  .rs3 .stats{grid-template-columns:repeat(2,1fr);gap:8px;}
+  .rs3 .stat{padding:16px 14px 12px;}
+  .rs3 .stat-val{font-size:26px;}
+  .rs3 .stat-ico{width:36px;height:36px;}
+
+  /* Banner simplifié */
+  .rs3 .banner{padding:18px 18px;border-radius:14px;}
+  .rs3 .banner-title{font-size:20px;}
+  .rs3 .banner-sub{display:none;}
+  .rs3 .banner-right{width:100%;}
+  .rs3 .bsv{font-size:22px;}
+  .rs3 .bstat{padding:10px 14px;}
+
+  /* Cards en 1 colonne */
   .rs3 .cards-grid{grid-template-columns:1fr;}
+
+  /* Modal full-screen sur mobile */
+  .rs3 .overlay{padding:0;align-items:flex-end;}
+  .rs3 .modal{
+    width:100%;border-radius:22px 22px 0 0;
+    max-height:88vh;
+  }
+  .rs3 .m-grid{grid-template-columns:1fr;}
+  .rs3 .m-item[style*="span 2"]{grid-column:span 1 !important;}
+
+  /* Filtres empilés */
+  .rs3 .filter-bar{flex-direction:column;align-items:stretch;}
+  .rs3 .fi{width:100%;}
+
+  /* Charts */
+  .rs3 .charts{grid-template-columns:1fr;}
+  .rs3 .cc{padding:16px 14px;}
+
+  /* Topbar */
+  .rs3 .bell-btn{width:32px;height:32px;}
+  .rs3 .btn-indigo{padding:7px 12px;font-size:11px;}
+
+  /* Toast plein largeur */
+  .rs3 .toasts{left:12px;right:12px;bottom:12px;align-items:stretch;}
+  .rs3 .toast{min-width:0;width:100%;}
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE — Très petit (≤380px)
+════════════════════════════════════════════ */
+@media(max-width:380px){
+  .rs3 .stats{grid-template-columns:1fr;}
+  .rs3 .banner-title{font-size:18px;}
+  .rs3 .stat-val{font-size:22px;}
+  .rs3 .bsv{font-size:20px;}
+  .rs3 .ac-name{font-size:13px;}
+  .rs3 .cards-hd-title{font-size:13px;}
 }
 `;
 
@@ -785,11 +887,10 @@ function AlumniCard({ u, onView, onPDF, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: .96 }}
-      transition={{ duration: .22, delay: index * 0.03 }}
+      transition={{ duration: .22, delay: Math.min(index * 0.03, 0.3) }}
     >
       <div className="ac-stripe" />
       <div className="ac-body">
-        {/* Head */}
         <div className="ac-head">
           <div className="ac-av-wrap">
             <div className="ac-av" style={{ background: avC(u.id) }}>{ini(u)}</div>
@@ -807,8 +908,6 @@ function AlumniCard({ u, onView, onPDF, index }) {
             )}
           </div>
         </div>
-
-        {/* Rows */}
         <div className="ac-rows">
           {u.profile?.job_title && (
             <div className="ac-row">
@@ -835,8 +934,6 @@ function AlumniCard({ u, onView, onPDF, index }) {
             </div>
           )}
         </div>
-
-        {/* Tags */}
         <div className="ac-tags">
           <span className={`ac-tag ${hasJob ? "tag-emerald" : "tag-rose"}`}>
             {hasJob ? "En poste" : "Sans emploi"}
@@ -849,8 +946,6 @@ function AlumniCard({ u, onView, onPDF, index }) {
           )}
         </div>
       </div>
-
-      {/* Footer */}
       <div className="ac-footer">
         <span className="ac-email">{u.email}</span>
         <div className="ac-actions">
@@ -918,6 +1013,21 @@ export default function ResponsableDashboard() {
   const [selUser,     setSelUser]     = useState(null);
   const [open,        setOpen]        = useState(false);
   const [view,        setView]        = useState("dashboard");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Fermer sidebar sur changement de vue (mobile)
+  const setViewAndClose = (v) => { setView(v); setSidebarOpen(false); };
+
+  // Fermer sidebar si on clique ailleurs
+  useEffect(() => {
+    const handler = (e) => {
+      if (sidebarOpen && !e.target.closest(".sb") && !e.target.closest(".menu-btn")) {
+        setSidebarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [sidebarOpen]);
 
   useEffect(() => { loadInitial(); }, []);
 
@@ -1018,9 +1128,20 @@ export default function ResponsableDashboard() {
   return (
     <div className="rs3">
 
+      {/* Overlay mobile sidebar */}
+      <div
+        className={`sb-overlay ${sidebarOpen ? "open" : ""}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* ── SIDEBAR ── */}
-      <aside className="sb">
+      <aside className={`sb ${sidebarOpen ? "open" : ""}`}>
         <div className="sb-accent" />
+
+        {/* Bouton fermer sur mobile */}
+        <button className="sb-close-btn" onClick={() => setSidebarOpen(false)}>
+          <X size={14} />
+        </button>
 
         {/* Profil animé */}
         <div className="sb-profile">
@@ -1044,8 +1165,8 @@ export default function ResponsableDashboard() {
 
         <nav className="sb-nav">
           <div className="sb-grp">Principal</div>
-          <NI icon={LayoutDashboard} label="Tableau de bord" active={view === "dashboard"} onClick={() => setView("dashboard")} />
-          <NI icon={Users}           label="Alumni"          active={view === "alumni"}    onClick={() => setView("alumni")} />
+          <NI icon={LayoutDashboard} label="Tableau de bord" active={view === "dashboard"} onClick={() => setViewAndClose("dashboard")} />
+          <NI icon={Users}           label="Alumni"          active={view === "alumni"}    onClick={() => setViewAndClose("alumni")} />
         </nav>
         <div className="sb-ft">
           <NI icon={LogOut} label="Déconnexion" active={false} onClick={() => navigate("/login")} />
@@ -1057,10 +1178,16 @@ export default function ResponsableDashboard() {
 
         {/* Topbar */}
         <div className="topbar">
+          {/* Hamburger mobile */}
+          <button className="menu-btn" onClick={() => setSidebarOpen(o => !o)}>
+            <Menu size={18} strokeWidth={2} />
+          </button>
+
           <div className="topbar-title">
             {view === "dashboard" ? "Tableau de bord" : "Alumni"}
             <span className="crumb">{view === "dashboard" ? "Tableau de bord" : "Alumni"}</span>
           </div>
+
           <div className="srch">
             <Search size={12} style={{ color: "var(--ink5)", flexShrink: 0 }} strokeWidth={2} />
             <input placeholder="Nom, email, entreprise…" value={search} onChange={e => setSearch(e.target.value)} />
@@ -1070,10 +1197,12 @@ export default function ResponsableDashboard() {
               </span>
             )}
           </div>
+
           <span className="top-date">{today}</span>
           <div className="bell-btn"><Bell size={14} strokeWidth={2} /></div>
           <button className="btn btn-indigo" onClick={exportExcel}>
-            <Download size={12} /> Exporter
+            <Download size={12} />
+            <span style={{ display: "inline" }}>Exporter</span>
           </button>
         </div>
 
@@ -1146,7 +1275,7 @@ export default function ResponsableDashboard() {
               </div>
 
               {/* Bar + top ent */}
-              <div style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
+              <div className="bar-top-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 14 }}>
                 <ChartCard title="Inscriptions récentes" sub="8 dernières périodes" badge="Histogramme" bColor={C.sky}>
                   <BarChart data={barData} barSize={18}>
                     <defs>
@@ -1176,7 +1305,7 @@ export default function ResponsableDashboard() {
 
               {/* Filters */}
               <div className="filter-bar">
-                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "8.5px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "var(--ink4)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "8.5px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "var(--ink4)", flexShrink: 0 }}>
                   <Filter size={11} /> Filtres
                 </div>
                 <select className="fi" value={filters.status} onChange={e => setFilters({ ...filters, status: e.target.value })}>
@@ -1204,6 +1333,7 @@ export default function ResponsableDashboard() {
                   display: "flex", alignItems: "center", gap: 8, padding: "9px 15px",
                   borderRadius: "var(--r3)", background: "rgba(91,91,214,.07)",
                   border: "1px solid rgba(91,91,214,.18)", fontSize: 12, color: "var(--indigo)", fontWeight: 600,
+                  flexWrap: "wrap",
                 }}>
                   <Building2 size={13} />
                   Filtré par : <strong>{entreprises.find(e => String(e.id) === String(filters.entreprise_id))?.nom || "Entreprise"}</strong>
