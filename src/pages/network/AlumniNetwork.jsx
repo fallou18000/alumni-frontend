@@ -2,30 +2,23 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 
-/* ─── Helpers ─── */
-const PALETTE = [
-  ["#1e3a8a","#2563eb"], ["#5b21b6","#7c3aed"],
-  ["#065f46","#059669"], ["#9a3412","#dc2626"],
-  ["#0c4a6e","#0284c7"], ["#713f12","#d97706"],
-  ["#831843","#db2777"], ["#1e3a5f","#1d4ed8"],
-];
-const gradOf   = id => PALETTE[(id || 0) % PALETTE.length];
+/* ─── Palette réduite : 1 teinte par initiale ─── */
+const HUE = [220,250,160,330,190,35,280,12];
+const avatarColor = id => {
+  const h = HUE[(id || 0) % HUE.length];
+  return { bg: `hsl(${h},55%,92%)`, fg: `hsl(${h},55%,35%)` };
+};
 const initials = u =>
   ((u?.first_name?.[0] || "") + (u?.last_name?.[0] || "")).toUpperCase() || "AL";
 
 /* ─── Skeleton ─── */
 function Skeleton() {
   return (
-    <div className="an-skel-card">
-      <div className="an-skel-banner an-skel" />
-      <div className="an-skel-body">
-        <div className="an-skel-line an-skel" style={{ width: "55%" }} />
-        <div className="an-skel-line an-skel" style={{ width: "78%" }} />
-        <div style={{ display: "flex", gap: 6 }}>
-          <div className="an-skel-line an-skel" style={{ width: 60 }} />
-          <div className="an-skel-line an-skel" style={{ width: 72 }} />
-        </div>
-        <div className="an-skel-line an-skel" style={{ width: "38%", marginTop: 8 }} />
+    <div className="an-card an-skel-card">
+      <div className="an-skel an-skel-av" />
+      <div style={{ flex: 1 }}>
+        <div className="an-skel an-skel-ln" style={{ width: "60%", marginBottom: 8 }} />
+        <div className="an-skel an-skel-ln" style={{ width: "80%" }} />
       </div>
     </div>
   );
@@ -33,98 +26,51 @@ function Skeleton() {
 
 /* ─── Card ─── */
 function AlumniCard({ user, onView }) {
-  const [c1, c2] = gradOf(user.id);
-  const approved  = user.status === "approved";
-  const roleMap   = { 1: "Admin", 2: "Alumni", 3: "Responsable" };
-  const role      = roleMap[user.role_id] || "Alumni";
+  const { bg, fg } = avatarColor(user.id);
+  const approved = user.status === "approved";
 
   return (
-    <div className="an-card">
+    <div className="an-card" onClick={() => onView(user.id)} role="button" tabIndex={0}
+      onKeyDown={e => e.key === "Enter" && onView(user.id)}>
 
-      {/* Bandeau */}
-      <div className="an-card-banner"
-        style={{ background: `linear-gradient(135deg, ${c1}, ${c2})` }}>
-        <div className="an-card-banner-mesh" />
-        <div className="an-card-banner-shine" />
+      {/* Avatar */}
+      <div className="an-av" style={{ background: bg, color: fg }}>
+        {initials(user)}
+      </div>
 
-        {/* Statut flottant */}
-        <div className="an-card-status"
-          style={approved ? {} : {
-            background: "rgba(245,158,11,0.18)",
-            borderColor: "rgba(245,158,11,0.3)",
-          }}>
-          <span className="an-card-status-dot"
-            style={{ background: approved ? "#4ade80" : "#f59e0b" }} />
-          {approved ? "Vérifié" : "En attente"}
+      {/* Info */}
+      <div className="an-info">
+        <div className="an-name">
+          {user.first_name} {user.last_name}
+          <span className={`an-dot ${approved ? "an-dot-ok" : "an-dot-wait"}`} />
         </div>
+        <div className="an-email">{user.email}</div>
 
-        {/* Avatar */}
-        <div className="an-card-av-shell">
-          <div className="an-card-av"
-            style={{ background: `linear-gradient(145deg, ${c1}, ${c2})` }}>
-            {initials(user)}
-          </div>
+        <div className="an-tags">
+          {user.profile?.job_title && (
+            <span className="an-tag">{user.profile.job_title}</span>
+          )}
+          {user.profile?.promotion && (
+            <span className="an-tag an-tag-subtle">Promo {user.profile.promotion}</span>
+          )}
+          {user.profile?.entreprise?.nom && (
+            <span className="an-tag an-tag-subtle">{user.profile.entreprise.nom}</span>
+          )}
         </div>
       </div>
 
-      {/* Body */}
-      <div className="an-card-body">
-        <div className="an-card-name">{user.first_name} {user.last_name}</div>
-        <div className="an-card-email">{user.email}</div>
-
-        {/* Chips */}
-        <div className="an-card-chips">
-          <span className="an-chip an-chip-role">{role}</span>
-          {user.profile?.promotion && (
-            <span className="an-chip an-chip-promo">Promo {user.profile.promotion}</span>
-          )}
-          {user.profile?.job_title && (
-            <span className="an-chip an-chip-job">{user.profile.job_title}</span>
-          )}
-        </div>
-
-        <div className="an-card-sep" />
-
-        {/* Méta */}
-        <div className="an-card-meta">
-          {user.profile?.entreprise?.nom && (
-            <div className="an-meta-row">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M3 9h18M9 21V9"/>
-              </svg>
-              {user.profile.entreprise.nom}
-            </div>
-          )}
-          {(user.filiere?.name || user.ufr?.nom) && (
-            <div className="an-meta-row">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2">
-                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-              </svg>
-              {[user.filiere?.name, user.ufr?.nom].filter(Boolean).join(" · ")}
-            </div>
-          )}
-        </div>
-
-        {/* Footer */}
-        <div className="an-card-foot">
-          <button className="an-card-btn" onClick={() => onView(user.id)}>
-            Voir le profil
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2.2">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
-        </div>
+      {/* Arrow */}
+      <div className="an-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </div>
     </div>
   );
 }
 
-/* ─── Page ─── */
+/* ═══════════════ PAGE ═══════════════ */
 export default function AlumniNetwork() {
   const [users,   setUsers]   = useState([]);
   const [loading, setLoading] = useState(true);
@@ -133,17 +79,17 @@ export default function AlumniNetwork() {
   const [sort,    setSort]    = useState("name");
   const navigate = useNavigate();
 
-  const loadUsers = async () => {
+  const load = async () => {
     try {
       setLoading(true); setError(null);
       const res  = await api.get("/alumni/users");
       const data = res.data;
       setUsers(Array.isArray(data) ? data : data.users || []);
-    } catch { setError("Impossible de charger les membres du réseau."); }
+    } catch { setError("Impossible de charger les membres."); }
     finally  { setLoading(false); }
   };
 
-  useEffect(() => { loadUsers(); }, []);
+  useEffect(() => { load(); }, []);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase().trim();
@@ -152,7 +98,8 @@ export default function AlumniNetwork() {
           `${u.first_name} ${u.last_name}`.toLowerCase().includes(q) ||
           u.email?.toLowerCase().includes(q) ||
           u.profile?.job_title?.toLowerCase().includes(q) ||
-          u.profile?.promotion?.toString().includes(q))
+          u.profile?.promotion?.toString().includes(q) ||
+          u.profile?.entreprise?.nom?.toLowerCase().includes(q))
       : users;
     return [...list].sort((a, b) =>
       sort === "name"
@@ -166,97 +113,113 @@ export default function AlumniNetwork() {
   return (
     <div className="an-page">
 
-      {/* ── Header ── */}
-      <div className="an-header">
-        <div className="an-header-bar" />
-        <div className="an-header-body">
-          <div className="an-header-left">
-            <div className="an-eyebrow">
-              <span className="an-eyebrow-line" />
-              Réseau Alumni
-            </div>
-            <h1 className="an-title">Notre communauté</h1>
-            <p className="an-sub">Connectez-vous avec les anciens étudiants de la plateforme</p>
-          </div>
-          {!loading && !error && (
-            <div className="an-stats">
-              <div className="an-stat">
-                <div className="an-stat-val" style={{ color: "#2563eb" }}>{users.length}</div>
-                <div className="an-stat-lbl">Membres</div>
-              </div>
-              <div className="an-stat">
-                <div className="an-stat-val" style={{ color: "#059669" }}>{approved}</div>
-                <div className="an-stat-lbl">Vérifiés</div>
-              </div>
-            </div>
-          )}
+      {/* ── En-tête ── */}
+      <div className="an-head">
+        <div className="an-head-left">
+          <div className="an-label">Réseau alumni</div>
+          <h1 className="an-title">Notre communauté</h1>
+          <p className="an-sub">Retrouvez et connectez-vous avec les anciens étudiants</p>
         </div>
+        {!loading && !error && (
+          <div className="an-kpis">
+            <div className="an-kpi">
+              <div className="an-kpi-val">{users.length}</div>
+              <div className="an-kpi-lbl">Membres</div>
+            </div>
+            <div className="an-kpi-sep" />
+            <div className="an-kpi">
+              <div className="an-kpi-val an-kpi-green">{approved}</div>
+              <div className="an-kpi-lbl">Vérifiés</div>
+            </div>
+            <div className="an-kpi-sep" />
+            <div className="an-kpi">
+              <div className="an-kpi-val an-kpi-muted">
+                {users.length - approved}
+              </div>
+              <div className="an-kpi-lbl">En attente</div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* ── Filtres ── */}
+      {/* ── Barre de recherche ── */}
       {!loading && !error && (
-        <div className="an-filters">
+        <div className="an-toolbar">
           <div className="an-search">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" style={{ color: "#94a3b8", flexShrink: 0 }}>
+              stroke="currentColor" strokeWidth="2" className="an-search-ico">
               <circle cx="11" cy="11" r="8"/>
               <path d="m21 21-4.35-4.35"/>
             </svg>
             <input className="an-search-inp"
-              placeholder="Nom, email, promotion…"
-              value={search} onChange={e => setSearch(e.target.value)} />
+              placeholder="Nom, email, poste, promotion…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
             {search && (
-              <span className="an-search-clear" onClick={() => setSearch("")}>
+              <button className="an-clear" onClick={() => setSearch("")} aria-label="Effacer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12"/>
                 </svg>
-              </span>
+              </button>
             )}
           </div>
 
-          <div className="an-sort">
+          <div className="an-select-wrap">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2" style={{ color: "#94a3b8" }}>
+              stroke="currentColor" strokeWidth="2" className="an-select-ico">
               <path d="M3 6h18M7 12h10M11 18h2"/>
             </svg>
-            <select value={sort} onChange={e => setSort(e.target.value)}>
-              <option value="name">Nom A→Z</option>
+            <select className="an-select" value={sort}
+              onChange={e => setSort(e.target.value)}>
+              <option value="name">Nom A → Z</option>
               <option value="promo">Promotion récente</option>
             </select>
           </div>
 
           {search && (
-            <span className="an-count">
+            <span className="an-badge">
               {filtered.length} résultat{filtered.length !== 1 ? "s" : ""}
             </span>
           )}
         </div>
       )}
 
-      {/* ── Grille ── */}
-      <div className="an-grid">
+      {/* ── Liste ── */}
+      <div className="an-list">
 
-        {loading && Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} />)}
+        {loading && Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} />)}
 
         {error && !loading && (
           <div className="an-state">
-            <div className="an-state-ico">⚠️</div>
+            <div className="an-state-ico">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.5">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 8v4M12 16h.01"/>
+              </svg>
+            </div>
             <div className="an-state-title">Erreur de chargement</div>
             <div className="an-state-sub">{error}</div>
-            <button className="an-card-btn" onClick={loadUsers}>Réessayer</button>
+            <button className="an-retry" onClick={load}>Réessayer</button>
           </div>
         )}
 
         {!loading && !error && filtered.length === 0 && (
           <div className="an-state">
-            <div className="an-state-ico">🔍</div>
-            <div className="an-state-title">Aucun membre trouvé</div>
-            <div className="an-state-sub">
-              {search ? `Aucun résultat pour « ${search} »` : "Le réseau est vide pour l'instant."}
+            <div className="an-state-ico">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.5">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </div>
+            <div className="an-state-title">
+              {search ? `Aucun résultat pour « ${search} »` : "Le réseau est vide"}
             </div>
             {search && (
-              <button className="an-card-btn" onClick={() => setSearch("")}>
+              <button className="an-retry" onClick={() => setSearch("")}>
                 Effacer la recherche
               </button>
             )}
@@ -265,285 +228,254 @@ export default function AlumniNetwork() {
 
         {!loading && !error && filtered.map((u, i) => (
           <div key={u.id} style={{
-            animation: "anFadeUp .3s ease both",
-            animationDelay: `${Math.min(i, 12) * 0.04}s`,
+            animation: "anUp .25s ease both",
+            animationDelay: `${Math.min(i, 15) * 30}ms`,
           }}>
             <AlumniCard user={u} onView={id => navigate(`/alumni/profile/${id}`)} />
           </div>
         ))}
       </div>
 
+      {/* ── Styles ── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
-        /* ── Page ── */
         .an-page {
           min-height: 100vh;
-          background: #eef1f9;
-          padding: 26px 28px 52px;
-          display: flex; flex-direction: column; gap: 18px;
+          background: #f4f6fb;
+          padding: 32px 28px 64px;
+          display: flex; flex-direction: column; gap: 16px;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          -webkit-font-smoothing: antialiased;
         }
 
-        /* ══════════════════════════════
-           HEADER
-        ══════════════════════════════ */
-        .an-header {
+        /* ── En-tête ── */
+        .an-head {
+          display: flex; align-items: flex-end; justify-content: space-between;
+          gap: 24px; flex-wrap: wrap;
           background: #fff;
-          border-radius: 20px;
-          border: 1px solid #e2e8f5;
-          overflow: hidden;
+          border: 1px solid rgba(15,23,42,0.07);
+          border-radius: 18px;
+          padding: 28px 32px;
+          position: relative; overflow: hidden;
         }
-        .an-header-bar {
-          height: 3px;
-          background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6, #a78bfa);
+        .an-head::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 3px;
+          background: linear-gradient(90deg, #6366f1, #8b5cf6, #0ea5e9);
         }
-        .an-header-body {
-          display: flex; align-items: center; justify-content: space-between;
-          gap: 20px; padding: 24px 28px; flex-wrap: wrap;
+        .an-label {
+          font-size: 9px; font-weight: 700; letter-spacing: 2.5px;
+          text-transform: uppercase; color: #6366f1; margin-bottom: 8px;
+          display: flex; align-items: center; gap: 6px;
         }
-        .an-eyebrow {
-          font-size: 9px; font-weight: 700; letter-spacing: 3px;
-          text-transform: uppercase; color: #3b82f6;
-          display: flex; align-items: center; gap: 8px;
-          margin-bottom: 8px;
-        }
-        .an-eyebrow-line {
-          display: block; width: 18px; height: 1.5px;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-          border-radius: 2px;
+        .an-label::before {
+          content: ''; display: block; width: 16px; height: 1.5px;
+          background: #6366f1; border-radius: 2px;
         }
         .an-title {
-          font-size: 22px; font-weight: 700; color: #0f172a;
-          letter-spacing: -0.4px; margin-bottom: 4px;
+          font-size: 24px; font-weight: 700; color: #0f172a;
+          letter-spacing: -0.5px; margin-bottom: 5px;
         }
-        .an-sub { font-size: 12.5px; color: #64748b; }
+        .an-sub { font-size: 13px; color: #64748b; font-weight: 400; }
 
-        .an-stats { display: flex; gap: 10px; flex-wrap: wrap; }
-        .an-stat {
-          background: #f8fafd; border: 1px solid #e2e8f5;
-          border-radius: 14px; padding: 14px 20px;
-          text-align: center; min-width: 84px;
+        /* KPIs */
+        .an-kpis {
+          display: flex; align-items: center; gap: 0;
+          background: #f8fafc; border: 1px solid rgba(15,23,42,0.07);
+          border-radius: 14px; overflow: hidden; flex-shrink: 0;
         }
-        .an-stat-val {
-          font-size: 22px; font-weight: 700; letter-spacing: -1px;
-          line-height: 1; margin-bottom: 3px;
+        .an-kpi { padding: 14px 22px; text-align: center; }
+        .an-kpi-sep { width: 1px; background: rgba(15,23,42,0.07); align-self: stretch; }
+        .an-kpi-val {
+          font-size: 24px; font-weight: 700; color: #0f172a;
+          letter-spacing: -1px; line-height: 1; margin-bottom: 3px;
+          font-family: 'DM Mono', monospace;
         }
-        .an-stat-lbl {
+        .an-kpi-val.an-kpi-green { color: #10b981; }
+        .an-kpi-val.an-kpi-muted { color: #94a3b8; }
+        .an-kpi-lbl {
           font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
           text-transform: uppercase; color: #94a3b8;
         }
 
-        /* ══════════════════════════════
-           FILTRES
-        ══════════════════════════════ */
-        .an-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        /* ── Toolbar ── */
+        .an-toolbar {
+          display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
         .an-search {
-          flex: 1; min-width: 200px; max-width: 340px;
+          flex: 1; min-width: 220px; max-width: 400px;
           display: flex; align-items: center; gap: 8px;
-          background: #fff; border: 1px solid #e2e8f5;
-          border-radius: 10px; padding: 9px 13px; transition: all .2s;
+          background: #fff; border: 1px solid rgba(15,23,42,0.09);
+          border-radius: 12px; padding: 10px 14px;
+          transition: border-color .2s, box-shadow .2s;
         }
         .an-search:focus-within {
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+          border-color: rgba(99,102,241,0.4);
+          box-shadow: 0 0 0 3px rgba(99,102,241,0.07);
         }
+        .an-search-ico { color: #94a3b8; flex-shrink: 0; }
         .an-search-inp {
           background: none; border: none; outline: none;
-          font-size: 13px; font-family: 'Inter', system-ui, sans-serif;
+          font-size: 13px; font-family: 'Plus Jakarta Sans', sans-serif;
           color: #0f172a; width: 100%;
         }
-        .an-search-inp::placeholder { color: #cbd5e1; }
-        .an-search-clear {
-          color: #94a3b8; cursor: pointer; flex-shrink: 0;
-          display: flex; transition: color .15s;
+        .an-search-inp::placeholder { color: #c8d1e0; }
+        .an-clear {
+          background: none; border: none; cursor: pointer;
+          color: #94a3b8; display: flex; padding: 0; transition: color .15s;
         }
-        .an-search-clear:hover { color: #ef4444; }
+        .an-clear:hover { color: #f43f5e; }
 
-        .an-sort {
+        .an-select-wrap {
           display: flex; align-items: center; gap: 7px;
-          background: #fff; border: 1px solid #e2e8f5;
-          border-radius: 10px; padding: 9px 12px;
+          background: #fff; border: 1px solid rgba(15,23,42,0.09);
+          border-radius: 12px; padding: 10px 13px;
         }
-        .an-sort select {
+        .an-select-ico { color: #94a3b8; flex-shrink: 0; }
+        .an-select {
           background: transparent; border: none; outline: none;
-          font-size: 12.5px; font-family: 'Inter', system-ui, sans-serif;
-          color: #334155; cursor: pointer; appearance: none; min-width: 100px;
+          font-size: 12.5px; font-family: 'Plus Jakarta Sans', sans-serif;
+          color: #334155; cursor: pointer; appearance: none; min-width: 120px;
         }
-        .an-count {
-          font-size: 11px; font-weight: 600; color: #3b82f6;
-          background: rgba(59,130,246,0.09);
-          border: 1px solid rgba(59,130,246,0.16);
+        .an-badge {
+          font-size: 11px; font-weight: 600; color: #6366f1;
+          background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.18);
           border-radius: 99px; padding: 4px 12px; white-space: nowrap;
+          font-family: 'DM Mono', monospace;
         }
 
-        /* ══════════════════════════════
-           GRID
-        ══════════════════════════════ */
-        .an-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
-          gap: 15px;
-        }
-        @media (max-width: 640px) {
-          .an-page { padding: 18px 14px 40px; }
-          .an-grid { grid-template-columns: 1fr; }
+        /* ── Liste ── */
+        .an-list {
+          display: flex; flex-direction: column; gap: 6px;
         }
 
-        /* ══════════════════════════════
-           CARD
-        ══════════════════════════════ */
+        /* ── Card ── */
         .an-card {
+          display: flex; align-items: center; gap: 16px;
           background: #fff;
-          border: 1px solid #e2e8f5;
-          border-radius: 20px;
-          overflow: hidden;
-          display: flex; flex-direction: column;
-          transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+          border: 1px solid rgba(15,23,42,0.07);
+          border-radius: 14px;
+          padding: 16px 20px;
+          cursor: pointer;
+          transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+          outline: none;
         }
         .an-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 16px 48px rgba(15,23,42,0.1);
-          border-color: #b3cff5;
+          transform: translateX(4px);
+          box-shadow: 0 4px 20px rgba(15,23,42,0.08);
+          border-color: rgba(99,102,241,0.25);
         }
-
-        /* Bandeau */
-        .an-card-banner {
-          height: 76px; position: relative; overflow: hidden; flex-shrink: 0;
-        }
-        .an-card-banner-mesh {
-          position: absolute; inset: 0; opacity: .18;
-          background-image:
-            linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);
-          background-size: 20px 20px;
-        }
-        .an-card-banner-shine {
-          position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 25% 80%, rgba(255,255,255,.18), transparent 58%);
-        }
-
-        /* Statut flottant */
-        .an-card-status {
-          position: absolute; top: 11px; right: 13px; z-index: 2;
-          display: flex; align-items: center; gap: 5px;
-          background: rgba(255,255,255,0.18);
-          backdrop-filter: blur(6px);
-          border: 1px solid rgba(255,255,255,0.28);
-          border-radius: 99px; padding: 3px 10px;
-          font-size: 9.5px; font-weight: 700; color: #fff; letter-spacing: 0.3px;
-        }
-        .an-card-status-dot {
-          width: 6px; height: 6px; border-radius: 50%;
+        .an-card:focus-visible {
+          box-shadow: 0 0 0 3px rgba(99,102,241,0.2);
         }
 
         /* Avatar */
-        .an-card-av-shell {
-          position: absolute; bottom: -24px; left: 20px; z-index: 2;
-        }
-        .an-card-av {
-          width: 52px; height: 52px; border-radius: 50%;
+        .an-av {
+          width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
-          font-size: 17px; font-weight: 700; color: #fff;
-          border: 3px solid #fff;
-          box-shadow: 0 4px 16px rgba(0,0,0,.14);
-          letter-spacing: -0.5px;
+          font-size: 14px; font-weight: 700; letter-spacing: -0.3px;
         }
 
-        /* Body */
-        .an-card-body {
-          padding: 34px 20px 18px;
-          flex: 1; display: flex; flex-direction: column;
+        /* Info */
+        .an-info { flex: 1; min-width: 0; }
+        .an-name {
+          font-size: 14px; font-weight: 600; color: #0f172a;
+          letter-spacing: -0.1px; margin-bottom: 2px;
+          display: flex; align-items: center; gap: 7px;
         }
-        .an-card-name {
-          font-size: 16.5px; font-weight: 700; color: #0f172a;
-          letter-spacing: -0.2px; margin-bottom: 2px; line-height: 1.25;
+        .an-dot {
+          width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
         }
-        .an-card-email {
-          font-size: 11.5px; color: #94a3b8; margin-bottom: 14px;
+        .an-dot-ok   { background: #10b981; }
+        .an-dot-wait { background: #f59e0b; }
+
+        .an-email {
+          font-size: 11.5px; color: #94a3b8; margin-bottom: 10px;
           white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Chips */
-        .an-card-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
-        .an-chip {
-          display: inline-flex; align-items: center; gap: 3px;
-          font-size: 10px; font-weight: 600; padding: 3px 9px;
-          border-radius: 99px; border: 1px solid; letter-spacing: .2px;
+        /* Tags */
+        .an-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+        .an-tag {
+          font-size: 10.5px; font-weight: 600; padding: 2px 9px;
+          border-radius: 99px; border: 1px solid;
+          white-space: nowrap;
+          background: rgba(99,102,241,0.07);
+          color: #4f46e5;
+          border-color: rgba(99,102,241,0.2);
         }
-        .an-chip-role  { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-        .an-chip-promo { background: #f5f3ff; color: #5b21b6; border-color: #ddd6fe; }
-        .an-chip-job   { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
-
-        /* Séparateur */
-        .an-card-sep { height: 1px; background: #f0f4fc; margin-bottom: 12px; }
-
-        /* Méta */
-        .an-card-meta { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-        .an-meta-row {
-          display: flex; align-items: center; gap: 8px;
-          font-size: 11.5px; color: #64748b;
+        .an-tag-subtle {
+          background: #f4f6fb;
+          color: #64748b;
+          border-color: rgba(15,23,42,0.08);
         }
-        .an-meta-row svg { color: #94a3b8; flex-shrink: 0; }
 
-        /* Footer */
-        .an-card-foot { margin-top: auto; display: flex; justify-content: flex-end; }
-        .an-card-btn {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-size: 12px; font-weight: 600;
-          font-family: 'Inter', system-ui, sans-serif;
-          color: #2563eb;
-          background: rgba(59,130,246,0.07);
-          border: 1px solid rgba(59,130,246,0.2);
-          border-radius: 9px; padding: 8px 14px;
+        /* Flèche */
+        .an-arrow {
+          color: #c8d1e0; flex-shrink: 0; transition: color .18s, transform .18s;
+          display: flex; align-items: center;
+        }
+        .an-card:hover .an-arrow {
+          color: #6366f1; transform: translateX(3px);
+        }
+
+        /* ── State ── */
+        .an-state {
+          padding: 80px 20px; text-align: center;
+          display: flex; flex-direction: column; align-items: center; gap: 12px;
+          background: #fff; border: 1px solid rgba(15,23,42,0.07);
+          border-radius: 14px;
+        }
+        .an-state-ico { color: #cbd5e1; }
+        .an-state-title {
+          font-size: 15px; font-weight: 600; color: #334155;
+        }
+        .an-retry {
+          margin-top: 4px;
+          font-size: 12.5px; font-weight: 600;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          color: #6366f1; background: rgba(99,102,241,0.07);
+          border: 1px solid rgba(99,102,241,0.2);
+          border-radius: 9px; padding: 8px 18px;
           cursor: pointer; transition: all .18s;
         }
-        .an-card-btn:hover {
-          background: #3b82f6; color: #fff;
-          border-color: transparent;
-          box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+        .an-retry:hover {
+          background: #6366f1; color: #fff; border-color: transparent;
         }
-        .an-card-btn svg { transition: transform .18s; }
-        .an-card-btn:hover svg { transform: translateX(3px); }
-
-        /* ── State (empty/error) ── */
-        .an-state {
-          grid-column: 1 / -1;
-          padding: 72px 20px; text-align: center;
-          display: flex; flex-direction: column; align-items: center; gap: 12px;
-        }
-        .an-state-ico { font-size: 36px; }
-        .an-state-title { font-size: 15px; font-weight: 700; color: #334155; }
-        .an-state-sub   { font-size: 13px; color: #94a3b8; }
 
         /* ── Skeleton ── */
         @keyframes anShimmer {
-          0%   { background-position: -600px 0; }
-          100% { background-position: 600px 0; }
+          0%   { background-position: -400px 0; }
+          100% { background-position: 400px 0; }
         }
         .an-skel {
-          background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-          background-size: 600px 100%;
-          animation: anShimmer 1.4s infinite;
+          background: linear-gradient(90deg, #f1f5f9 25%, #e8edf5 50%, #f1f5f9 75%);
+          background-size: 400px 100%;
+          animation: anShimmer 1.3s infinite;
           border-radius: 8px;
         }
         .an-skel-card {
-          background: #fff; border: 1px solid #e2e8f5;
-          border-radius: 20px; overflow: hidden;
+          pointer-events: none; cursor: default;
         }
-        .an-skel-banner { height: 76px; }
-        .an-skel-body {
-          padding: 34px 20px 22px;
-          display: flex; flex-direction: column; gap: 10px;
+        .an-skel-av {
+          width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
         }
-        .an-skel-line { height: 12px; border-radius: 6px; }
+        .an-skel-ln { height: 12px; border-radius: 6px; }
 
         /* ── Animation entrée ── */
-        @keyframes anFadeUp {
-          from { opacity: 0; transform: translateY(10px); }
+        @keyframes anUp {
+          from { opacity: 0; transform: translateY(6px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 640px) {
+          .an-page { padding: 18px 14px 48px; }
+          .an-head { padding: 22px 20px; }
+          .an-kpis { display: none; }
+          .an-card { padding: 14px 16px; }
         }
       `}</style>
     </div>
